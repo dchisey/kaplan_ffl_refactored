@@ -8,7 +8,8 @@
     "start": "webpack-dev-server --port 8080",
     "update": "node update",
     "server": "node index",
-    "build": "webpack --display-error-details"
+    "build": "webpack --display-error-details",
+    "postinstall": "webpack --config ./webpack-prod.config.js --progress --colors"
   },
   "repository": {
     "type": "git",
