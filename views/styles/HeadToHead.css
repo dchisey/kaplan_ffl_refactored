@@ -1,0 +1,55 @@
+/*#PSContainer {
+	background-color: rgba(0, 0, 0, 0.3);
+	height: 100px;
+}
+
+
+
+#PSContainer form {
+	width: 100%;
+	height: 100%;
+	display: block;
+	font-family: 'Bungee Hairline', cursive;
+}
+
+.PlayerSelection {
+	background-color: transparent;
+	text-align: center;
+	font-family: 'Raleway', sans-serif;
+	border-width: 0px 0px 3px 0px;
+	width: 250px;
+	font-size: 1.5em;
+	border-color: white;
+	outline: 0;
+	color: white;
+}
+
+
+
+@media only screen and (min-width: 765px) {
+
+	#PSContainer form {
+		display: flex;
+		width: 100%;
+		height: 100%;
+		align-items: center;
+		justify-content: space-around;
+		font-family: 'Bungee Hairline', cursive;
+	}
+
+
+
+	#PSContainer input[type="submit"] {
+		border: 3px solid white;
+		background-color: transparent;
+		color: white;
+		height: 70px;
+		width: 200px;
+		font-family: 'Bungee Hairline', cursive;
+		font-size: 42px;
+		line-height: 0px;
+	}
+
+}
+
+*/

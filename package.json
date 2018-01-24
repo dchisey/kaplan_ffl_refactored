@@ -4,7 +4,11 @@
   "description": "A React dashboard of all of my league's fantasy football stats to find trends, insights and results of alternate scheduling scenarios.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --port 8080",
+    "update": "node update",
+    "server": "node index",
+    "build": "webpack --display-error-details"
   },
   "repository": {
     "type": "git",
@@ -15,5 +19,42 @@
   "bugs": {
     "url": "https://github.com/dchisey/kaplan_ffl/issues"
   },
-  "homepage": "https://github.com/dchisey/kaplan_ffl#readme"
+  "homepage": "https://github.com/dchisey/kaplan_ffl#readme",
+  "proxy": {
+    "target": "http://localhost:3000"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "body-parser": "^1.18.2",
+    "csvdata": "^1.4.0",
+    "d3": "^4.12.2",
+    "dotenv": "^4.0.0",
+    "eslint": "^4.12.1",
+    "express": "^4.16.2",
+    "mongodb": "^2.2.33",
+    "mongoose": "^4.13.5",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.12.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-overdrive": "0.0.9",
+    "react-router-dom": "^4.2.2",
+    "styled-components": "^2.4.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "concurrently": "^3.5.1",
+    "css-loader": "^0.28.7",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1",
+    "html-webpack-plugin": "^2.30.1",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.9.7"
+  }
 }
