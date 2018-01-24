@@ -4,12 +4,12 @@
   "description": "A React dashboard of all of my league's fantasy football stats to find trends, insights and results of alternate scheduling scenarios.",
   "main": "index.js",
   "scripts": {
+    "postinstall": "webpack -p",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --port 8080",
+    "start": "node mongooseServer",
     "update": "node update",
     "server": "node index",
-    "build": "webpack --display-error-details",
-    "postinstall": "webpack --config ./webpack-prod.config.js --progress --colors"
+    "build": "webpack --display-error-details"
   },
   "repository": {
     "type": "git",
