@@ -9,7 +9,7 @@
     "start": "node mongooseServer",
     "update": "node update",
     "server": "node index",
-    "build": "webpack --display-error-details"
+    "build": "node node_modules/webpack/bin/webpack.js --display-error-details"
   },
   "repository": {
     "type": "git",
