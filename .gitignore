@@ -1,6 +1,2 @@
-# dotenv environment variables file
-.env
-
-# OS file
-.DS_Store 
-'node_modules' 
+node_modules
+.vscode/*
