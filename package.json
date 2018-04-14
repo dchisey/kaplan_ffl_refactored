@@ -1,23 +1,16 @@
 {
   "name": "kaplan_ffl_refactored",
-  "version": "1.0.0",
-  "description": "Reworked fantasy football dashboard",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dchisey/kaplan_ffl.git"
-  },
-  "author": "Dan Hisey",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dchisey/kaplan_ffl/issues"
-  },
-  "homepage": "https://github.com/dchisey/kaplan_ffl#readme",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "create-react-app": "^1.5.2",
-    "npm": "^5.8.0"
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
