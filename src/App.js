@@ -17,7 +17,7 @@ class App extends Component {
       headers: { "Content-Type": "application/json" }
     }
 
-    const uri = 'https://kaplan-ffl.herokuapp.com/api/leaguecomparison'
+    const uri = 'http://localhost:8080/'
     const data = await fetch(uri)
       .then(res => res.json())
       .catch(e => console.warn(e));
