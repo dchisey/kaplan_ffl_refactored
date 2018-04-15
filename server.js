@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8080;
 const URI = process.env.DB_URI;
 // const URI = 'mongodb://localhost/kaplanFfl'
 
-console.log(`env: ${process.env.PORT} || selectedPort: `${PORT})
+console.log(`env: ${process.env.PORT} || selectedPort: ${PORT}`)
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
