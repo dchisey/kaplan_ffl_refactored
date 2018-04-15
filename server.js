@@ -6,18 +6,27 @@ const mongoose = require('mongoose');
 const Result = require('./server/models');
 const routes = require('./server/routes');
 
-console.log(process.env.NODE_ENV)
+//bring in dotenv variables
+require('dotenv').config();
+
+const PORT = process.env.PORT || 8080;
+const URI = process.env.DB_URI;
+// const URI = 'mongodb://localhost/kaplanFfl'
+
+console.log(`env: ${process.env.PORT} || selectedPort: `${PORT})
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 
-//bring in dotenv variables
-require('dotenv').config();
-
-const PORT = 8080;
-const URI = process.env.DB_URI;
-// const URI = 'mongodb://localhost/kaplanFfl'
-console.log(URI)
+//add middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
 
 mongoose.Promise = global.Promise;
 
@@ -28,16 +37,6 @@ mongoose.set('debug', true);
 mongoose.connect(URI, {
   keepAlive: true
 })
-
-
-//add middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  next();
-});
 
 //handle events from DB opening
 mongoose.connection.on('error', console.error.bind(console, 'Connection error: '));
