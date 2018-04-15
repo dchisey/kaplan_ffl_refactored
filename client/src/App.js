@@ -9,7 +9,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.ajax()
+    //this.ajax()
   }
 
   async ajax() {
