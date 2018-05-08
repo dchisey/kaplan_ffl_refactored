@@ -1,39 +1,77 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+	BrowserRouter as Router,
+	Route,
+	Switch,
+	Link
+} from 'react-router-dom';
+import styled from 'styled-components';
+import OwnerPerformance from './pages/OwnerPerformance';
+import LeagueGraphs from './pages/LeagueGraphs';
+//import AnalysisOptions from './pages/';
+import AnalysisOption from './buildingBlocks/AnalysisOption';
+
+const Title = styled.header`
+  display: block;
+  text-align: center;
+`;
+
+const StyledSwitch = styled.div`
+  background-color: black;
+  width: 500px;
+  height: 500px;
+`
 
 class App extends Component {
   constructor() {
     super();
-    this.ajax = this.ajax.bind(this);
+    this.state = {
+      components: [
+        { 
+          title: 'Owner Performance', 
+          description: 'See how each owner compares to other leaguemates.', 
+          key: 1,
+          path:'/ownerperformance'
+        },
+        {
+          title: 'Charts & Graphs',
+          description: 'Data visualizations of leaguewide performance',
+          key:2,
+          path:'/leaguegraphs'
+        }
+      ]
+    }
+    this.getData = this.getData.bind(this);
   }
 
-  componentDidMount() {
-    this.ajax()
-  }
-
-  async ajax() {
-    const data = await fetch('../api/leaguecomparison')
+  async getData() {
+    return await fetch('../api/leaguecomparison')
       .then(res => res.json())
       .catch(err => console.log(err))
-
-    console.log(data)
-    return data
   }
 
   render() {
+    const { components } = this.state
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Router>
+        <div>
+          <Title>
+            <Link to="/" style={{ textDecoration: 'none', color: '#ede8e8' }}>
+              <h1 id="#title">Kaplan FFL Stat Sheet</h1>
+            </Link>
+          </Title>
+          <Switch>
+              <Route exact path="/" component={() => components.map(component => AnalysisOption(component))} />
+              <Route path="/ownerperformance" component={OwnerPerformance}/>
+              <Route path="/leaguegraphs" component={() => <LeagueGraphs getData={this.getData} />}/>
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }
+
+
 
 export default App;

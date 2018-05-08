@@ -27,7 +27,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/api/leaguecomparison', (req, res) => {
-		const week = 12;
+		const week = 13;
 		WeeklyResult.aggregate([
 			{
 				$match: { Week: { $lte: week }}
@@ -37,7 +37,9 @@ module.exports = function(app) {
 					_id: '$Owner',
 					Week: { $max: '$Week' },
 					Pts: { $sum: '$Pts' },
+					//CumePts: { $add: [ '$Elite', '$Pts'] },
 					Elite: { $sum: '$Elite' },
+					//OverallQS: { $sum: ['$$Elite', '$$Superior'] },
 					Superior: { $sum: '$Superior' },
 					Inferior: { $sum: '$Inferior' },
 					MeanPlus: { $sum: '$MeanPlus' },
