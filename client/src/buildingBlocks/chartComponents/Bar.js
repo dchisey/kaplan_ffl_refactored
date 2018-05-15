@@ -3,16 +3,55 @@ import * as d3 from 'd3';
 import styled from 'styled-components';
 
 const Rect = styled.rect`
-    fill: green;
+    fill: ${props => {
+        if(props.ownerFocused) {
+            return 'blue';
+        } else {
+            return 'green';
+        }
+    }};
+    opacity: ${props => !props.ownerFocused && !props.ownerHovered ? 0.6 : 1};
 `
 
-export default ({ xScale, barScale, dataPoint, height, margin, index, padding }) => {
-    const style = {
-        width: xScale.bandwidth() - padding + 'px',
-        height: barScale(dataPoint),
-        transform: `translate(${xScale.bandwidth() * index}px, ${height - margin.bottom + margin.top - barScale(dataPoint)}px`
+export default class Bar extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            hover: false
+        }
     }
-    return (
-        <Rect style={style} />
-    )
+
+    render() {
+        const { 
+            xScale, 
+            barScale, 
+            dataPoint, 
+            height, 
+            margin, 
+            index, 
+            padding, 
+            changeOwnerFocus, 
+            changeHoverFocus,
+            removeHoverFocus,
+            owner,
+            ownerFocus,
+            hoverFocus
+        } = this.props
+        const transform = {
+            transform: `translate(${xScale.bandwidth() * index}px, ${height - margin.bottom + margin.top - barScale(dataPoint)}px`
+        }
+        return (
+            <Rect 
+                width={xScale.bandwidth() - padding + 'px'}
+                height={barScale(dataPoint)}
+                style={transform}
+                onMouseEnter={changeHoverFocus}
+                onMouseLeave={removeHoverFocus}
+                onClick={changeOwnerFocus}
+                id={owner}
+                ownerFocus={ownerFocus}
+                ownerFocused={owner == ownerFocus}
+                ownerHovered={owner == hoverFocus}/>
+        )
+    }
 }
