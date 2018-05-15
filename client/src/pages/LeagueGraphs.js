@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import SvgSpace from '../buildingBlocks/SvgSpace'
 import BarChart from '../buildingBlocks/BarChart'
 import LineChart from '../buildingBlocks/LineChart'
+import DivSpace from '../buildingBlocks/DivSpace'
+import HeatMap from '../buildingBlocks/HeatMap'
 
 class LeagueGraphs extends Component {
     constructor(props) {
         super(props)
         this.state = {
             leagueData: [],
-            style: {
-                height: '400px',
-                width: '50%',
-                backgroundColor: '#ede8e8'
-            }
+            ownerFocus: '',
+            hoverFocus: ''
         }
         this.getSpecs = this.getSpecs.bind(this)
+        this.changeOwnerFocus = this.changeOwnerFocus.bind(this)
+        this.changeHoverFocus = this.changeHoverFocus.bind(this)
+        this.removeHoverFocus = this.removeHoverFocus.bind(this)
     }
 
     async componentDidMount() {
@@ -25,24 +28,57 @@ class LeagueGraphs extends Component {
 
     getSpecs(ref) {
         const element = ref.current
-        this.setState({
-            svgSpecs: {
-                width: element.clientWidth,
-                height: element.clientHeight
-            }
-        })
+        if(!this.state.svgSpecs) { 
+            this.setState({
+                svgSpecs: {
+                    width: element.clientWidth,
+                    height: element.clientHeight
+                }
+            })
+        }
+    }
+
+    changeOwnerFocus(e) {
+        e.preventDefault()
+        console.dir(e)
+        this.setState({ ownerFocus: e.target.id })
+    }
+
+    changeHoverFocus(e) {
+        console.log('hoverFocus')
+        this.setState({ hoverFocus: e.target.id })
+    }
+
+    removeHoverFocus(e) {
+        console.log(e.target.id)
+        this.setState({ hoverFocus: '' })
     }
 
     render() {
-        console.log(this.state)
         return (
             <div>
                 {this.state.loaded ? (
                     <div>
-                        <BarChart {...this.state} />
-                        <LineChart {...this.state} getSpecs={this.getSpecs} />
-                    </div>
-                ) : <h1>Loading</h1>}
+                        <SvgSpace {...this.state} getSpecs={this.getSpecs} render={() => 
+                            <BarChart {...this.state} 
+                                changeOwnerFocus={this.changeOwnerFocus}
+                                changeHoverFocus={this.changeHoverFocus}
+                                removeHoverFocus={this.removeHoverFocus} />
+                        } />
+                        <SvgSpace {...this.state} getSpecs={this.getSpecs} render={() => 
+                            <LineChart {...this.state} 
+                               changeOwnerFocus={this.changeOwnerFocus}
+                               changeHoverFocus={this.changeHoverFocus}
+                               removeHoverFocus={this.removeHoverFocus} />
+                        } />
+                        <DivSpace render={() => 
+                            <HeatMap {...this.state} 
+                                changeOwnerFocus={this.changeOwnerFocus}
+                                changeHoverFocus={this.changeHoverFocus}
+                                removeHoverFocus={this.removeHoverFocus} />
+                        } />
+                    </div>)
+                : <h1>Loading...</h1>}
             </div>
         )
     }

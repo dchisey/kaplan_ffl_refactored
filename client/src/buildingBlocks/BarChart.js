@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 //import styled from 'styled-components';
 import Axis from './chartComponents/Axis'
 import Bar from './chartComponents/Bar'
-import SvgSpace from './SvgSpace'
 import * as d3 from 'd3';
 
 class BarChart extends Component {
@@ -19,42 +18,39 @@ class BarChart extends Component {
             },
             padding: 2
         }
-        this.getSpecs = this.getSpecs.bind(this)
+        this.buildScales = this.buildScales.bind(this)
         this.createGraph = this.createGraph.bind(this)
-        this.svg = React.createRef()
     }
 
     componentDidMount() {        
-        this.getSpecs()
+        this.buildScales()
     }
 
-    getSpecs() {
-        const svg = this.svg.current;
-        const width = svg.clientWidth;
-        const height = svg.clientHeight;
+    buildScales() {
+        const { svgSpecs, leagueData } = this.props
+        const { width, height } = svgSpecs
         const { stat, margin, padding } = this.state
-        const leagueData = this.props.leagueData;
+
         const xScale = d3.scaleBand()
             .domain(leagueData.map(entry => entry._id.split(' ')[0]))
             .rangeRound([0, width - margin.right - margin.left])
             
-
         const yScale = d3.scaleLinear()
-                        .range([height - margin.bottom, 0])
-                        .domain(d3.extent(leagueData.map(entry => entry[stat])))
-                        // .domain([0, d3.max(leagueData, entry => entry[stat])]);
+            .range([height - margin.bottom, 0])
+            .domain(d3.extent(leagueData.map(entry => entry[stat])))
+            .nice(3)
 
         const barScale = d3.scaleLinear()
-                        .range([0, height - margin.bottom])
-                        .domain(d3.extent(leagueData.map(entry => entry[stat])))
-                        // .domain([0, d3.max(leagueData, entry => entry[stat])]);
+            .range([0, height - margin.bottom])
+            .domain(d3.extent(leagueData.map(entry => entry[stat])))
+            .nice(3)
 
         this.setState({
-            width: width,
-            height: height,
-            xScale: xScale,
-            yScale: yScale,
-            barScale: barScale,
+            width,
+            height,
+            xScale,
+            yScale,
+            barScale,
             mounted: true
         })
     }
@@ -62,14 +58,25 @@ class BarChart extends Component {
     createGraph() {
         const { xScale, yScale, margin, width, height, stat } = this.state
         const barTranslation = { transform: `translate(4px, 0)`}
-        const leagueData = this.props.leagueData
+        const { ownerFocus, hoverFocus, changeOwnerFocus, changeHoverFocus, removeHoverFocus, leagueData } = this.props
 
         return (
             <g transform={`translate(${margin.left}, 0)`}>
                 <Axis scale={xScale} orient="x" dimensions={{ width, height, margin }} leagueData={this.props.leagueData} />
                 <Axis scale={yScale} orient="y" dimensions={{ width, height, margin }} leagueData={this.props.leagueData} />
                 <g style={barTranslation}>
-                    {leagueData.map((entry, index) => <Bar {...this.state} dataPoint={entry[stat]} index={index} />)}
+                    {leagueData.map((owner, index) => 
+                        <Bar {...this.state}
+                            dataPoint={owner[stat]} 
+                            index={index} 
+                            key={index}
+                            ownerFocus={ownerFocus} 
+                            hoverFocus={hoverFocus}
+                            owner={owner._id} 
+                            changeOwnerFocus={changeOwnerFocus}
+                            changeHoverFocus={changeHoverFocus}
+                            removeHoverFocus={removeHoverFocus}
+                            />)}
                 </g>
             </g>
         )
@@ -77,9 +84,9 @@ class BarChart extends Component {
 
     render() {
         return (
-            <svg style={this.props.style} ref={this.svg}>
+            <g>
                 {this.state.mounted ? this.createGraph() : <h1>Loading</h1>}
-            </svg>
+            </g>
         )
     }
 }
