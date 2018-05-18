@@ -11,9 +11,9 @@ class BarChart extends Component {
             mounted: false,
             stat: 'Pts',
             margin: {
-                top: 20,
+                top: 50,
                 right: 20,
-                bottom: 70,
+                bottom: 100,
                 left: 50
             },
             padding: 2
@@ -22,7 +22,8 @@ class BarChart extends Component {
         this.createGraph = this.createGraph.bind(this)
     }
 
-    componentDidMount() {        
+    componentDidMount() {
+        window.addEventListener('resize', this.buildScales)        
         this.buildScales()
     }
 
@@ -58,11 +59,20 @@ class BarChart extends Component {
     createGraph() {
         const { xScale, yScale, margin, width, height, stat } = this.state
         const barTranslation = { transform: `translate(4px, 0)`}
-        const { ownerFocus, hoverFocus, changeOwnerFocus, changeHoverFocus, removeHoverFocus, leagueData } = this.props
-
+        const { ownerFocus, hoverFocus, changeOwnerFocus, changeHoverFocus, removeHoverFocus, leagueData, rotation, title } = this.props
+        const textStyle = {
+            color: 'black',
+            fontSize: '25px',
+            textAnchor: 'middle',
+            fontWeight: 'bold'
+        }
         return (
             <g transform={`translate(${margin.left}, 0)`}>
-                <Axis scale={xScale} orient="x" dimensions={{ width, height, margin }} leagueData={this.props.leagueData} />
+                <Axis scale={xScale} 
+                    orient="x" 
+                    dimensions={{ width, height, margin }} 
+                    leagueData={this.props.leagueData}
+                    rotation={rotation} />
                 <Axis scale={yScale} orient="y" dimensions={{ width, height, margin }} leagueData={this.props.leagueData} />
                 <g style={barTranslation}>
                     {leagueData.map((owner, index) => 
@@ -78,13 +88,17 @@ class BarChart extends Component {
                             removeHoverFocus={removeHoverFocus}
                             />)}
                 </g>
+                <text
+                    x={(width - margin.left - margin.right) / 2}
+                    y={margin.top / 1.5}
+                    style={textStyle}>{title}</text>
             </g>
         )
     }
 
     render() {
         return (
-            <g>
+            <g onChange={(e) => console.log(e)}>
                 {this.state.mounted ? this.createGraph() : <h1>Loading</h1>}
             </g>
         )

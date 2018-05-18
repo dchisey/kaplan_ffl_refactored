@@ -26,9 +26,10 @@ class LeagueGraphs extends Component {
         this.setState({ leagueData, loaded })
     }
 
-    getSpecs(ref) {
+    getSpecs(e, ref) {
         const element = ref.current
-        if(!this.state.svgSpecs) { 
+        console.log(element.clientHeight, element.clientWidth)
+        if(!this.state.svgSpecs || e) { 
             this.setState({
                 svgSpecs: {
                     width: element.clientWidth,
@@ -40,33 +41,35 @@ class LeagueGraphs extends Component {
 
     changeOwnerFocus(e) {
         e.preventDefault()
-        console.dir(e)
         this.setState({ ownerFocus: e.target.id })
     }
 
     changeHoverFocus(e) {
-        console.log('hoverFocus')
         this.setState({ hoverFocus: e.target.id })
     }
 
     removeHoverFocus(e) {
-        console.log(e.target.id)
         this.setState({ hoverFocus: '' })
     }
 
     render() {
+        console.log(this.state.svgSpecs)
         return (
             <div>
                 {this.state.loaded ? (
                     <div>
                         <SvgSpace {...this.state} getSpecs={this.getSpecs} render={() => 
-                            <BarChart {...this.state} 
+                            <BarChart {...this.state}
+                                title="Total Points" 
+                                rotation="-45"
                                 changeOwnerFocus={this.changeOwnerFocus}
                                 changeHoverFocus={this.changeHoverFocus}
                                 removeHoverFocus={this.removeHoverFocus} />
                         } />
                         <SvgSpace {...this.state} getSpecs={this.getSpecs} render={() => 
                             <LineChart {...this.state} 
+                               title="Weekly Points Trend" 
+                               rotation="0"
                                changeOwnerFocus={this.changeOwnerFocus}
                                changeHoverFocus={this.changeHoverFocus}
                                removeHoverFocus={this.removeHoverFocus} />

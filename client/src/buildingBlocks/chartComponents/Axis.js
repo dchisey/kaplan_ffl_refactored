@@ -18,16 +18,19 @@ class Axis extends Component {
 
     createAxis() {
         const currAxis = this.currAxis.current;
-        const { scale, orient, dimensions, leagueData } = this.props;
+        const { scale, orient, dimensions, leagueData, rotation } = this.props;
         const { width, height, margin } = dimensions;
         const isX = orient == 'x'
         const scaledAxis = isX ? d3.axisBottom(scale) : d3.axisLeft(scale);
+        const textAnchor = +rotation ? 'end' : 'middle'
+        console.log(`x: ${isX} | text-anchor: ${Boolean(rotation)} | data-type: ${typeof rotation}`)
+        
         if(isX) {
             d3.select(currAxis).call(scaledAxis)
                 .attr('transform', `translate(0, ${height - margin.bottom + margin.top})`)
               .selectAll('text')  
-                .attr('text-anchor', 'end')
-                .attr('transform', 'rotate(-45)')
+                .attr('text-anchor', textAnchor)
+                .attr('transform', `rotate(${rotation})`)
         } else {
             d3.select(currAxis).call(scaledAxis)
                 .attr('transform', `translate(0, ${margin.top})`)

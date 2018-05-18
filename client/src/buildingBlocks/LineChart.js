@@ -11,9 +11,9 @@ export default class LineChart extends Component {
             mounted: false,
             stat: 'Pts',
             margin: {
-                top: 20,
+                top: 50,
                 right: 20,
-                bottom: 70,
+                bottom: 100,
                 left: 50
             },
             padding: 2
@@ -23,6 +23,7 @@ export default class LineChart extends Component {
     }
 
     componentDidMount() {
+        window.addEventListener('resize', this.buildScales)
         this.buildScales()
     }
 
@@ -59,11 +60,24 @@ export default class LineChart extends Component {
 
     createGraph() {
         const { xScale, yScale, margin, width, height, stat, line } = this.state
-        const { leagueData, ownerFocus, hoverFocus, changeOwnerFocus, changeHoverFocus, removeHoverFocus } = this.props
+        const { leagueData, ownerFocus, hoverFocus, changeOwnerFocus, changeHoverFocus, removeHoverFocus, title, rotation } = this.props
+        const textStyle = {
+            fill: 'black',
+            fontSize: '25px',
+            fontWeight: 'bold',
+            textAnchor: 'middle'
+        }
         return (
             <g transform={`translate(${margin.left}, 0)`}>
-                <Axis scale={xScale} orient="x" dimensions={{ width, height, margin }} leagueData={this.props.leagueData} />
-                <Axis scale={yScale} orient="y" dimensions={{ width, height, margin }} leagueData={this.props.leagueData} />
+                <Axis scale={xScale} 
+                    orient="x" 
+                    dimensions={{ width, height, margin }} 
+                    leagueData={leagueData}
+                    rotation={rotation} />
+                <Axis scale={yScale}
+                    orient="y" 
+                    dimensions={{ width, height, margin }} 
+                    leagueData={leagueData} />
                 {leagueData.map((owner, index) => {
                     const history = owner.History
                     return <Line 
@@ -77,11 +91,16 @@ export default class LineChart extends Component {
                         removeHoverFocus={removeHoverFocus}
                         key={index} />
                 })}
+                <text 
+                    x={(width - margin.left - margin.right) / 2}
+                    y={margin.top / 1.5}
+                    style={textStyle}>{title}</text>
             </g>
         )
     }
 
     render() {
+
         return (
             <g>
                 {this.state.mounted ? this.createGraph() : <h1>eat ass</h1>}

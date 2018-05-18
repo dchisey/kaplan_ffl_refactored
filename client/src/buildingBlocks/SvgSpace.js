@@ -10,27 +10,34 @@ export default class SvgSpace extends Component {
     }
 
     componentDidMount() {
+        window.addEventListener('resize', (e) => this.props.getSpecs(e, this.svg))
         if(this.props.getSpecs) {
-            this.props.getSpecs(this.svg)
+            this.props.getSpecs('', this.svg)
         }
         this.setState({ mounted: true })
     }
 
     componentDidUpdate() {
         if(this.props.getSpecs) {
-            this.props.getSpecs(this.svg)
+            this.props.getSpecs('', this.svg)
         }        
     }
 
     render() {
-        const style = {
+        const svgStyle = {
             height: '400px',
             width: '50%',
             backgroundColor: '#ede8e8'
         }
+
+        const textStyle = {
+            fill: 'black',
+            fontSize: '20px'
+        }
+
         return (
-            <svg style={style} ref={this.svg}>
-                {this.state.mounted ? this.props.render() : <h1>Still Loading...</h1>}
+            <svg style={svgStyle} ref={this.svg}>
+                {this.state.mounted ? this.props.render() : <h1>Still Loading...</h1>}              
             </svg>
         )
     } 
