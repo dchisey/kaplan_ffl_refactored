@@ -39,12 +39,12 @@ module.exports = function(app) {
 					Pts: { $sum: '$Pts' },
 					//CumePts: { $add: [ '$Elite', '$Pts'] },
 					Elite: { $sum: '$Elite' },
-					//OverallQS: { $sum: ['$$Elite', '$$Superior'] },
 					Superior: { $sum: '$Superior' },
 					Inferior: { $sum: '$Inferior' },
 					MeanPlus: { $sum: '$MeanPlus' },
 					MeanMinus: { $sum: '$MeanMinus' },
 					Abyssmal: { $sum: '$Abyssmal' },
+					//OverallQS: { $sum: ['$Elite', '$Superior'] },
 					High: { $max: '$Pts' },
 					Low: { $min: '$Pts' },
 					History: { $push: { 
@@ -66,7 +66,8 @@ module.exports = function(app) {
 						]}
 					 }}
 				}
-			}
+			},
+			{ $sort: { Pts: 1 }}
 		], (err, data) => {
 			console.log(data);
 			console.log(err)

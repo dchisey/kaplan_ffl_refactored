@@ -14,12 +14,6 @@ import AnalysisOption from './buildingBlocks/AnalysisOption';
 const Title = styled.header`
   display: block;
   text-align: center;
-`;
-
-const StyledSwitch = styled.div`
-  background-color: black;
-  width: 500px;
-  height: 500px;
 `
 
 class App extends Component {

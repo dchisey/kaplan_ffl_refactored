@@ -23,7 +23,6 @@ class Axis extends Component {
         const isX = orient == 'x'
         const scaledAxis = isX ? d3.axisBottom(scale) : d3.axisLeft(scale);
         const textAnchor = +rotation ? 'end' : 'middle'
-        console.log(`x: ${isX} | text-anchor: ${Boolean(rotation)} | data-type: ${typeof rotation}`)
         
         if(isX) {
             d3.select(currAxis).call(scaledAxis)

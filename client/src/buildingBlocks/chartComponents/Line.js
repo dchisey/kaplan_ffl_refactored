@@ -4,7 +4,6 @@ import styled from 'styled-components'
 const Path = styled.path`
     fill: none;
     stroke: ${props => {
-        console.log(props)
         if(props.ownerFocused) {
             return 'blue';
         } else {

@@ -98,7 +98,7 @@ class BarChart extends Component {
 
     render() {
         return (
-            <g onChange={(e) => console.log(e)}>
+            <g>
                 {this.state.mounted ? this.createGraph() : <h1>Loading</h1>}
             </g>
         )

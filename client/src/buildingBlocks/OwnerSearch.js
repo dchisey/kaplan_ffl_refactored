@@ -26,7 +26,6 @@ export default class OwnerSearch extends Component {
     }
 
     updateSearch(e){
-        console.log(e)
         // this.setState({
         //     value: e.target.value
         // })
