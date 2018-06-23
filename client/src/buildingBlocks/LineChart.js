@@ -13,7 +13,7 @@ export default class LineChart extends Component {
             margin: {
                 top: 50,
                 right: 20,
-                bottom: 100,
+                bottom: 105,
                 left: 50
             },
             padding: 2

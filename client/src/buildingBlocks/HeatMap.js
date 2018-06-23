@@ -15,7 +15,7 @@ const Title = styled.h1`
 const Table = styled.table`
     table-layout: fixed;
     width: 100%;
-    padding: 0px 30px;
+    padding: 0px 30px 30px 30px;
 `
 
 const Name = styled.td`

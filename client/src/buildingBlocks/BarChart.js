@@ -13,7 +13,7 @@ class BarChart extends Component {
             margin: {
                 top: 50,
                 right: 20,
-                bottom: 100,
+                bottom: 105,
                 left: 50
             },
             padding: 2
@@ -31,6 +31,7 @@ class BarChart extends Component {
         const { svgSpecs, leagueData } = this.props
         const { width, height } = svgSpecs
         const { stat, margin, padding } = this.state
+        console.log(svgSpecs)
 
         const xScale = d3.scaleBand()
             .domain(leagueData.map(entry => entry._id.split(' ')[0]))

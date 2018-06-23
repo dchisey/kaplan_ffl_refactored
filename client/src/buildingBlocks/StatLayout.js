@@ -43,15 +43,12 @@ export default ({ hoverFocus, ownerFocus, leagueData }) => {
     
     //rearrange juggernaut data to get the desired result
     const juggernauts = ownerScores.reduce((acc, currWeek, i) => {
-        console.log(currWeek.Pts, highScores[i], acc)
         if(currWeek.Pts == highScores[i]) {
             acc++
         }
 
         return acc
     }, 0)
-
-    console.log(`juggernauts: ${juggernauts}`)
 
     //rearrange data to compare scores
     if(challengerScores) {

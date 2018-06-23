@@ -6,14 +6,13 @@ import LineChart from '../buildingBlocks/LineChart'
 import DonutChart from '../buildingBlocks/DonutChart'
 import DivSpace from '../buildingBlocks/DivSpace'
 import HeatMap from '../buildingBlocks/HeatMap'
-import { Spring, Transition, config } from 'react-spring'
 import { Motion, spring } from 'react-motion'
 import StatLayout from '../buildingBlocks/StatLayout'
 
 const Grid = styled.div`
     display: grid;
-    grid-template: repeat(${props => props.ownerFocus ? '2' : '1'}, ${props => props.gridHeight}px) / repeat(2, 50%);
-    grid-column-gap: 10px;
+    grid-template: repeat(${props => props.ownerFocus ? '2' : '1'}, ${props => props.gridHeight}px) / repeat(2, 1fr);
+    grid-column-gap : 10px;
     grid-row-gap : 10px;
 `
 
@@ -32,7 +31,7 @@ class LeagueGraphs extends Component {
             leagueData: [],
             ownerFocus: '',
             hoverFocus: '',
-            gridHeight: 350
+            gridHeight: 375
         }
         this.getSpecs = this.getSpecs.bind(this)
         this.changeOwnerFocus = this.changeOwnerFocus.bind(this)
@@ -48,10 +47,11 @@ class LeagueGraphs extends Component {
 
     getSpecs(e, ref) {
         const element = ref.current
+        console.dir(element.width.baseVal.value)
         if(!this.state.svgSpecs || e) { 
             this.setState({
                 svgSpecs: {
-                    width: element.clientWidth,
+                    width: (window.innerWidth - 50) / 2,
                     height: this.state.gridHeight
                 }
             })
@@ -91,7 +91,7 @@ class LeagueGraphs extends Component {
                                     removeHoverFocus={this.removeHoverFocus} />
                             } />
                             {/*****************react-motion test *******************/}
-                            <Motion defaultStyle={{ opacity: 0, height: 0 }} style={{ opacity: spring(1), height: spring(gridHeight) }}>
+                            {/* <Motion defaultStyle={{ opacity: 0, height: 0 }} style={{ opacity: spring(1), height: spring(gridHeight) }}>
                                 {interpolatingStyle => {
                                     return (<SvgSpace style={interpolatingStyle} bottom={ownerFocus} right={!ownerFocus} getSpecs={this.getSpecs} render={() => 
                                         <LineChart {...this.state} style={interpolatingStyle}
@@ -101,7 +101,7 @@ class LeagueGraphs extends Component {
                                             changeHoverFocus={this.changeHoverFocus}
                                             removeHoverFocus={this.removeHoverFocus} />
                                 } />)}}
-                            </Motion>
+                            </Motion> */}
                             {/*****************react-spring test *******************/}
                             {/* <Spring config={config.slow} 
                                 from={{ opacity: 0, height:0 }} 
@@ -118,7 +118,7 @@ class LeagueGraphs extends Component {
                                     } />)
                                 }
                             </Spring> */}
-                            {/* {ownerFocus ?
+                            {ownerFocus ?
                                 (<SvgSpace bottom left getSpecs={this.getSpecs} render={() => 
                                     <LineChart {...this.state} 
                                         title="Weekly Points Trend" 
@@ -134,7 +134,7 @@ class LeagueGraphs extends Component {
                                         changeOwnerFocus={this.changeOwnerFocus}
                                         changeHoverFocus={this.changeHoverFocus}
                                         removeHoverFocus={this.removeHoverFocus} />
-                                } />)} */}
+                                } />)}
                             {ownerFocus ? 
                                 <DivSpace grid={{ column: 2, row: '1 / span 2' }} render={() => (
                                     <div>

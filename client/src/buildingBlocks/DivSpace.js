@@ -20,28 +20,9 @@ export default class DivSpace extends Component {
         super(props)
         this.state = { mounted: true }
     }
-
-    componentDidMount() {
-        console.log('div mounted')
-    }
-
-    componentWillUnmount() {
-        console.log('div unmounted')
-    }
-
+    
     render() {
         return (
-            // <Transition config={config.slow} 
-            //     from={{ opacity: 0, height: 0 }} 
-            //     enter={{ opacity: 1, height: 710 }}
-            //     leave={{ opacity: 0, height: 0 }}
-            //     >
-            //     {styles => (
-            //         <Div style={styles} {...this.props}>
-            //             {this.state.mounted ? this.props.render() : <h1>Still Loading...</h1>}    
-            //         </Div>
-            //     )}
-            // </Transition>
             <Div {...this.props}>
                 {this.state.mounted ? this.props.render() : <h1>Still Loading...</h1>}    
             </Div>
