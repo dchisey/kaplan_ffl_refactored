@@ -8,7 +8,7 @@ import DivSpace from '../buildingBlocks/DivSpace'
 import HeatMap from '../buildingBlocks/HeatMap'
 import { Spring, Transition, config } from 'react-spring'
 import { Motion, spring } from 'react-motion'
-// import { TimingAnimation, Easing } from 'react-spring/dist/addons'
+import StatLayout from '../buildingBlocks/StatLayout'
 
 const Grid = styled.div`
     display: grid;
@@ -43,7 +43,6 @@ class LeagueGraphs extends Component {
     async componentDidMount() {
         const leagueData = await this.props.getData()
         const loaded = true;
-        console.log(leagueData)
         this.setState({ leagueData, loaded })
     }
 
@@ -78,7 +77,6 @@ class LeagueGraphs extends Component {
 
     render() {
         const { ownerFocus, gridHeight, leagueData } = this.state
-        console.log(leagueData)
         return (
             <div>
                 {this.state.loaded ? (
@@ -144,6 +142,7 @@ class LeagueGraphs extends Component {
                                         <DonutChart {...this.state} {...this.props} 
                                             data={leagueData.filter(owner => owner._id == ownerFocus)[0]}
                                         />
+                                        <StatLayout {...this.state} {...this.props} />
                                     </div>
                                 )}/>
                                 : null}

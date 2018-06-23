@@ -14,6 +14,8 @@ import AnalysisOption from './buildingBlocks/AnalysisOption';
 const Title = styled.header`
   display: block;
   text-align: center;
+  font-size: 32px;
+  line-height: 1.5em;
 `
 
 class App extends Component {
@@ -21,17 +23,17 @@ class App extends Component {
     super();
     this.state = {
       components: [
-        { 
-          title: 'Owner Performance', 
-          description: 'See how each owner compares to other leaguemates.', 
-          key: 1,
-          path:'/ownerperformance'
-        },
         {
           title: 'Charts & Graphs',
           description: 'Data visualizations of leaguewide performance',
           key:2,
           path:'/leaguegraphs'
+        },
+        { 
+          title: 'Owner Performance', 
+          description: 'See how each owner compares to other leaguemates.', 
+          key: 1,
+          path:'/ownerperformance'
         }
       ]
     }
