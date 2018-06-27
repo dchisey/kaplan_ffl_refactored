@@ -12,15 +12,6 @@ module.exports = function(app) {
 		const firstOwner = new RegExp(req.body.firstOwner, 'i');
 		const secondOwner = new RegExp(req.body.secondOwner, 'i');
 
-		// WeeklyResult.find({ $or : [{ Owner: firstOwner }, { Owner: secondOwner }] })
-		// 	.sort('Week Owner')
-		// 	.exec((err, data) => {
-		// 		if(err) console.log(err);
-
-		// 		console.log(data);
-		// 		res.json(data)
-		// 	});
-
 		WeeklyResult.find({}, (err, data) => {
 			res.send(data)
 			console.log(err)
@@ -38,14 +29,12 @@ module.exports = function(app) {
 					_id: '$Owner',
 					Week: { $max: '$Week' },
 					Pts: { $sum: '$Pts' },
-					//CumePts: { $add: [ '$Elite', '$Pts'] },
 					Elite: { $sum: '$Elite' },
 					Superior: { $sum: '$Superior' },
 					Inferior: { $sum: '$Inferior' },
 					MeanPlus: { $sum: '$MeanPlus' },
 					MeanMinus: { $sum: '$MeanMinus' },
 					Abyssmal: { $sum: '$Abyssmal' },
-					//OverallQS: { $sum: ['$Elite', '$Superior'] },
 					High: { $max: '$Pts' },
 					Low: { $min: '$Pts' },
 					History: { $push: { 
@@ -77,7 +66,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/*', (req, res) => {
-		res.sendFile(path.join(__dirname, 'client/public/index.html'), function(err) {
+		res.sendFile(path.join(__dirname, '../client/public/index.html'), function(err) {
 			if(err) {
 				res.status(500).send(err)
 			}
