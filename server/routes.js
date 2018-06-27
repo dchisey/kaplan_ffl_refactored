@@ -3,17 +3,10 @@
 const data = require('./controllers');
 const mongoose = require('mongoose');
 const WeeklyResult = require('./models');
+const path = require('path')
 
 
 module.exports = function(app) {
-
-	app.get('/*', (req, res) => {
-		res.sendFile(path.join(__dirname, 'client/public/index.html'), err => {
-			if(err) {
-				res.status(500).send(err)
-			}
-		})
-	})
 
 	app.get('/api/headtohead', (req, res) => {
 		const firstOwner = new RegExp(req.body.firstOwner, 'i');
@@ -82,4 +75,12 @@ module.exports = function(app) {
 			res.json(data);
 		});
 	});
+
+	app.get('/*', (req, res) => {
+		res.sendFile(path.join(__dirname, 'client/public/index.html'), function(err) {
+			if(err) {
+				res.status(500).send(err)
+			}
+		})
+	})
 }
