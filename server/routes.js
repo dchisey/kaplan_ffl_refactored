@@ -7,6 +7,14 @@ const WeeklyResult = require('./models');
 
 module.exports = function(app) {
 
+	app.get('/*', (req, res) => {
+		res.sendFile(path.join(__dirname, 'client/public/index.html'), err => {
+			if(err) {
+				res.status(500).send(err)
+			}
+		})
+	})
+
 	app.get('/api/headtohead', (req, res) => {
 		const firstOwner = new RegExp(req.body.firstOwner, 'i');
 		const secondOwner = new RegExp(req.body.secondOwner, 'i');
@@ -27,7 +35,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/api/leaguecomparison', (req, res) => {
-		const week = 13;
+		const week = 14;
 		WeeklyResult.aggregate([
 			{
 				$match: { Week: { $lte: week }}
