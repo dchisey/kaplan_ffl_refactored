@@ -50,7 +50,7 @@ class App extends Component {
     const { components } = this.state
 
     return (
-      <BrowserRouter>
+      <BrowserRouter basename='/client/src'>
         <div>
           <Title>
             <Link to="/" style={{ textDecoration: 'none', color: '#ede8e8' }}>
