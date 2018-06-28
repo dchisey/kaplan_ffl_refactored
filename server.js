@@ -16,7 +16,7 @@ const URI = process.env.DB_URI;
 console.log(`env: ${process.env.PORT} || selectedPort: ${PORT}`)
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
+  app.use('/static', express.static(path.join(__dirname, 'client/build')));
 }
 
 //add middleware
