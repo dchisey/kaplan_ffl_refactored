@@ -40,6 +40,7 @@ class LeagueGraphs extends Component {
     }
 
     async componentDidMount() {
+        console.log('leagueGraphs mounted')
         const leagueData = await this.props.getData()
         const loaded = true;
         this.setState({ leagueData, loaded })
