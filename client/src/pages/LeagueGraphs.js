@@ -78,6 +78,7 @@ class LeagueGraphs extends Component {
 
     render() {
         const { ownerFocus, gridHeight, leagueData } = this.state
+        console.log('lg rendered')
         return (
             <div>
                 {this.state.loaded ? (
@@ -156,7 +157,7 @@ class LeagueGraphs extends Component {
                             />
                         } />
                     </div>)
-                : <h1>Loading...</h1>}
+                : <h1 style={{ color: 'white', textAlign: 'center' }}>Loading...</h1>}
             </div>
         )
     }

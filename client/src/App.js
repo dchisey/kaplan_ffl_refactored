@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-	BrowserRouter,
+	BrowserRouter as Router,
 	Route,
 	Switch,
 	Link
@@ -50,7 +50,7 @@ class App extends Component {
     const { components } = this.state
 
     return (
-      <BrowserRouter basename='/client/src'>
+      <Router basename='/client/src'>
         <div>
           <Title>
             <Link to="/" style={{ textDecoration: 'none', color: '#ede8e8' }}>
@@ -63,7 +63,7 @@ class App extends Component {
               <Route path="/leaguegraphs" component={() => <LeagueGraphs getData={this.getData} />}/>
           </Switch>
         </div>
-      </BrowserRouter>
+      </Router>
     );
   }
 }
