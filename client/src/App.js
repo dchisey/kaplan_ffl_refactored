@@ -58,14 +58,9 @@ class App extends Component {
             </Link>
           </Title>
           <Switch>
-              <Route exact path="/" component={() => components.map(component => AnalysisOption(component))} />
               <Route path="/ownerperformance" component={OwnerPerformance}/>
-              <Route path="/leaguegraphs" component={() => {
-                return (
-                  <h1>ROUTE WORKED</h1>
-                  // <LeagueGraphs getData={this.getData} />
-                )
-              }}/>
+              <Route path="/leaguegraphs" component={() => <LeagueGraphs getData={this.getData} />} />
+              <Route path="/" component={() => components.map(component => AnalysisOption(component))} />
           </Switch>
         </div>
       </Router>

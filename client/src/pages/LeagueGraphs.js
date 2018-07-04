@@ -92,8 +92,7 @@ class LeagueGraphs extends Component {
         const { ownerFocus, gridHeight, leagueData } = this.state
         return (
             <div>
-                <h1>THIS IS WORKING</h1>
-                {/* {this.state.loaded ? (
+                {this.state.loaded ? (
                     <div>
                         <Grid ownerFocus={ownerFocus} gridHeight={gridHeight}>
                             <SvgSpace top left {...this.state} getSpecs={this.getSpecs} render={() => 
@@ -141,7 +140,7 @@ class LeagueGraphs extends Component {
                             />
                         } />
                     </div>)
-                : <h1 style={{ color: 'white', textAlign: 'center' }}>Loading...</h1>} */}
+                : <h1 style={{ color: 'white', textAlign: 'center' }}>Loading...</h1>}
             </div>
         )
     }
