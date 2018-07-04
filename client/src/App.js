@@ -50,7 +50,7 @@ class App extends Component {
     const { components } = this.state
 
     return (
-      <Router basename='/client/src'>
+      <Router>
         <div>
           <Title>
             <Link to="/" style={{ textDecoration: 'none', color: '#ede8e8' }}>
@@ -60,7 +60,12 @@ class App extends Component {
           <Switch>
               <Route exact path="/" component={() => components.map(component => AnalysisOption(component))} />
               <Route path="/ownerperformance" component={OwnerPerformance}/>
-              <Route path="/leaguegraphs" component={() => <LeagueGraphs getData={this.getData} />}/>
+              <Route path="/leaguegraphs" component={() => {
+                return (
+                  <h1>ROUTE WORKED</h1>
+                  // <LeagueGraphs getData={this.getData} />
+                )
+              }}/>
           </Switch>
         </div>
       </Router>

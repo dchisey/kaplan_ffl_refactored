@@ -39,6 +39,18 @@ class LeagueGraphs extends Component {
         this.removeHoverFocus = this.removeHoverFocus.bind(this)
     }
 
+    getDefaultProps() {
+        console.log('lg getDefaultProps')
+    }
+
+    getInitialState() {
+        console.log('lg getInitialState')
+    }
+
+    componentWillMount() {
+        console.log('lg componentWillMount')
+    }
+
     async componentDidMount() {
         console.log('leagueGraphs mounted')
         const leagueData = await this.props.getData()
@@ -78,10 +90,10 @@ class LeagueGraphs extends Component {
 
     render() {
         const { ownerFocus, gridHeight, leagueData } = this.state
-        console.log('lg rendered')
         return (
             <div>
-                {this.state.loaded ? (
+                <h1>THIS IS WORKING</h1>
+                {/* {this.state.loaded ? (
                     <div>
                         <Grid ownerFocus={ownerFocus} gridHeight={gridHeight}>
                             <SvgSpace top left {...this.state} getSpecs={this.getSpecs} render={() => 
@@ -92,34 +104,6 @@ class LeagueGraphs extends Component {
                                     changeHoverFocus={this.changeHoverFocus}
                                     removeHoverFocus={this.removeHoverFocus} />
                             } />
-                            {/*****************react-motion test *******************/}
-                            {/* <Motion defaultStyle={{ opacity: 0, height: 0 }} style={{ opacity: spring(1), height: spring(gridHeight) }}>
-                                {interpolatingStyle => {
-                                    return (<SvgSpace style={interpolatingStyle} bottom={ownerFocus} right={!ownerFocus} getSpecs={this.getSpecs} render={() => 
-                                        <LineChart {...this.state} style={interpolatingStyle}
-                                            title="Weekly Points Trend" 
-                                            rotation="0"
-                                            changeOwnerFocus={this.changeOwnerFocus}
-                                            changeHoverFocus={this.changeHoverFocus}
-                                            removeHoverFocus={this.removeHoverFocus} />
-                                } />)}}
-                            </Motion> */}
-                            {/*****************react-spring test *******************/}
-                            {/* <Spring config={config.slow} 
-                                from={{ opacity: 0, height:0 }} 
-                                to={{ opacity: 1, height: this.state.gridHeight }}
-                                >
-                                {styles => 
-                                    (<SvgSpace style={styles} bottom={ownerFocus} right={!ownerFocus} getSpecs={this.getSpecs} render={() => 
-                                        <LineChart {...this.state} style={styles}
-                                            title="Weekly Points Trend" 
-                                            rotation="0"
-                                            changeOwnerFocus={this.changeOwnerFocus}
-                                            changeHoverFocus={this.changeHoverFocus}
-                                            removeHoverFocus={this.removeHoverFocus} />
-                                    } />)
-                                }
-                            </Spring> */}
                             {ownerFocus ?
                                 (<SvgSpace bottom left getSpecs={this.getSpecs} render={() => 
                                     <LineChart {...this.state} 
@@ -157,7 +141,7 @@ class LeagueGraphs extends Component {
                             />
                         } />
                     </div>)
-                : <h1 style={{ color: 'white', textAlign: 'center' }}>Loading...</h1>}
+                : <h1 style={{ color: 'white', textAlign: 'center' }}>Loading...</h1>} */}
             </div>
         )
     }
