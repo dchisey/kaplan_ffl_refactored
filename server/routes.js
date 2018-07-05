@@ -66,7 +66,7 @@ module.exports = function(app) {
 	});
 
 	app.get('*', (req, res) => {
-		res.sendFile(path.resolve(__dirname, '/client/build/'), function(err) {
+		res.sendFile(path.resolve(__dirname, '../client/build/'), function(err) {
 			if(err) {
 				res.status(500).send(err)
 			}
