@@ -39,20 +39,7 @@ class LeagueGraphs extends Component {
         this.removeHoverFocus = this.removeHoverFocus.bind(this)
     }
 
-    getDefaultProps() {
-        console.log('lg getDefaultProps')
-    }
-
-    getInitialState() {
-        console.log('lg getInitialState')
-    }
-
-    componentWillMount() {
-        console.log('lg componentWillMount')
-    }
-
     async componentDidMount() {
-        console.log('leagueGraphs mounted')
         const leagueData = await this.props.getData()
         const loaded = true;
         this.setState({ leagueData, loaded })
