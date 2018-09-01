@@ -9,6 +9,8 @@ class Axis extends Component {
     }
 
     componentDidMount() {
+        console.log('mounted')
+        console.log(this.props.ticks)
         this.createAxis()
     }
 
@@ -18,13 +20,17 @@ class Axis extends Component {
 
     createAxis() {
         const currAxis = this.currAxis.current;
-        const { scale, orient, dimensions, leagueData, rotation, ticks } = this.props;
+        const { scale, orient, dimensions, rotation, ticks } = this.props;
         const { width, height, margin } = dimensions;
         const isX = orient == 'x'
         const scaledAxis = isX ? d3.axisBottom(scale) : d3.axisLeft(scale);
         const textAnchor = +rotation ? 'end' : 'middle'
-        console.log(ticks)
-        scaledAxis.ticks(ticks)
+
+        const formattedTicks = scaledAxis.tickValues(ticks)
+
+        if(ticks && typeof ticks[0] == 'number') {
+            formattedTicks.tickFormat(d3.format('d'))
+        }
         
         if(isX) {
             d3.select(currAxis).call(scaledAxis)

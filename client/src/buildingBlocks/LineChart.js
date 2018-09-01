@@ -68,7 +68,7 @@ export default class LineChart extends Component {
         const { xScale, yScale, margin, width, height } = this.state
         const { leagueData, ownerFocus, hoverFocus, changeOwnerFocus, 
                 changeHoverFocus, removeHoverFocus, title, rotation,
-                weekStart, previousWeekStart, totalWeeks  } = this.props
+                weekArray, previousWeekStart  } = this.props
         const textStyle = {
             fill: 'black',
             fontSize: '25px',
@@ -82,7 +82,7 @@ export default class LineChart extends Component {
                     dimensions={{ width, height, margin }} 
                     leagueData={leagueData}
                     rotation={rotation}
-                    ticks={totalWeeks} />
+                    ticks={weekArray} />
                 <Axis scale={yScale}
                     orient="y" 
                     dimensions={{ width, height, margin }} 

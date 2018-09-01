@@ -83,13 +83,17 @@ class LeagueGraphs extends Component {
           .then(res => res.json())
           .catch(err => console.log(err))
 
-        const lineToggle = !this.state.lineToggle
+        const totalWeeks = this.countNumWeeks()
         await this.setState({ 
             leagueData, 
+            totalWeeks,
             loaded: true,
             lineToggle: !this.state.lineToggle,
-            totalWeeks: this.countNumWeeks(),
-            previousWeekStart: weekStart
+            previousWeekStart: weekStart,
+            weekArray: this.createArray(totalWeeks, false, (item, i) => {
+                const weekDisplayed = weekStart + i
+                return weekDisplayed <= 13 ? weekDisplayed : weekDisplayed - 13
+            })
         })
     }
 
@@ -194,6 +198,7 @@ class LeagueGraphs extends Component {
                                 changeOwnerFocus={this.changeOwnerFocus}
                                 changeHoverFocus={this.changeHoverFocus}
                                 removeHoverFocus={this.removeHoverFocus} 
+                                createArray={this.createArray}
                             />
                         } />
                     </div>)

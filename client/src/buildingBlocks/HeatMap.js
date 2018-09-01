@@ -96,7 +96,7 @@ export default class HeatMap extends Component {
     }
 
     render() {
-        const { leagueData, ownerFocus, hoverFocus, changeHoverFocus, changeOwnerFocus, removeHoverFocus } = this.props
+        const { leagueData, ownerFocus, hoverFocus, totalWeeks, changeHoverFocus, changeOwnerFocus, removeHoverFocus } = this.props
         const quality = [
             { type: 'Abysmal', color: '#C11C17' }, 
             { type: 'Inferior', color: '#DE5003' }, 
@@ -113,7 +113,7 @@ export default class HeatMap extends Component {
                 <Legend quality={quality}/>
                 <Table>
                     <tbody>
-                        <TableHeader leagueData={leagueData}/>
+                        <TableHeader {...this.props}/>
                         {leagueData.map((owner, i) => {
                             return (
                                 <tr id={owner._id} 
