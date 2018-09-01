@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Line from './chartComponents/Line';
 import Axis from './chartComponents/Axis';
-import SvgSpace from './SvgSpace';
 import * as d3 from 'd3';
 
 export default class LineChart extends Component {
@@ -27,15 +26,22 @@ export default class LineChart extends Component {
         this.buildScales()
     }
 
-    buildScales() {
-        const { svgSpecs, leagueData } = this.props
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.lineToggle !== this.props.lineToggle) {
+            this.buildScales('_', nextProps)
+        }
+    }
+
+    buildScales(e, nextProps) {
+        const { leagueData, weekStart, weekEnd } = nextProps || this.props
+        const { svgSpecs } = this.props
         const { height, width } = svgSpecs
         const { margin, stat } = this.state
         const everyWkScore = leagueData.map(owner => owner.History.map(wk => wk.Pts))
         const flattenedScores = [].concat.apply([], everyWkScore)
 
         const xScale = d3.scaleLinear()
-            .domain([1, leagueData[0].Week])
+            .domain([weekStart, weekEnd])
             .range([0, width - margin.left - margin.right])
 
         const yScale = d3.scaleLinear()
@@ -44,7 +50,7 @@ export default class LineChart extends Component {
             .nice()
 
         const line = d3.line()
-            .x((d, i) => xScale(i + 1))
+            .x((d, i) => xScale(i + weekStart))
             .y((d, i) => yScale(d[stat]) + margin.top)
             .curve(d3.curveMonotoneX)
                
@@ -59,8 +65,10 @@ export default class LineChart extends Component {
     }
 
     createGraph() {
-        const { xScale, yScale, margin, width, height, stat, line } = this.state
-        const { leagueData, ownerFocus, hoverFocus, changeOwnerFocus, changeHoverFocus, removeHoverFocus, title, rotation } = this.props
+        const { xScale, yScale, margin, width, height } = this.state
+        const { leagueData, ownerFocus, hoverFocus, changeOwnerFocus, 
+                changeHoverFocus, removeHoverFocus, title, rotation,
+                weekStart, previousWeekStart, totalWeeks  } = this.props
         const textStyle = {
             fill: 'black',
             fontSize: '25px',
@@ -73,7 +81,8 @@ export default class LineChart extends Component {
                     orient="x" 
                     dimensions={{ width, height, margin }} 
                     leagueData={leagueData}
-                    rotation={rotation} />
+                    rotation={rotation}
+                    ticks={totalWeeks} />
                 <Axis scale={yScale}
                     orient="y" 
                     dimensions={{ width, height, margin }} 
@@ -86,6 +95,7 @@ export default class LineChart extends Component {
                         ownerFocus={ownerFocus} 
                         hoverFocus={hoverFocus}
                         owner={owner._id} 
+                        previousWeekStart={previousWeekStart}
                         changeOwnerFocus={changeOwnerFocus}
                         changeHoverFocus={changeHoverFocus}
                         removeHoverFocus={removeHoverFocus}

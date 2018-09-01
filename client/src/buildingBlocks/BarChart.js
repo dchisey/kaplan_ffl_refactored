@@ -23,14 +23,19 @@ class BarChart extends Component {
     }
 
     componentDidMount() {
-        window.addEventListener('resize', this.buildScales)        
+        window.addEventListener('resize', this.buildScales(this.props))        
         this.buildScales()
     }
 
-    buildScales() {
-        const { svgSpecs, leagueData } = this.props
+    componentWillReceiveProps(nextProps) {
+        this.buildScales(nextProps)
+    }
+
+    buildScales(nextProps) {
+        const { leagueData } = nextProps || this.props
+        const { svgSpecs } = this.props
         const { width, height } = svgSpecs
-        const { stat, margin, padding } = this.state
+        const { stat, margin } = this.state
 
         const xScale = d3.scaleBand()
             .domain(leagueData.map(entry => entry._id.split(' ')[0]))

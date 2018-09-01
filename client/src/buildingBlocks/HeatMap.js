@@ -112,30 +112,34 @@ export default class HeatMap extends Component {
                 <Title>Heat Map</Title>
                 <Legend quality={quality}/>
                 <Table>
-                    <TableHeader leagueData={leagueData}/>
-                    {leagueData.map((owner, i) => {
-                        return (
-                            <tr id={owner._id} 
-                                onMouseEnter={changeHoverFocus} 
-                                onMouseLeave={removeHoverFocus} 
-                                onClick={changeOwnerFocus}
-                                key={i}
-                                >
-                                <Name key={i}>{this.displayNames(owner)}</Name>
-                                {owner.History.map((week, j) => {
-                                    const ownerMatch = owner._id == ownerFocus
-                                    const hoverMatch = owner._id == hoverFocus
-                                    return <Performance key={j} 
-                                        {...week} 
-                                        quality={quality} 
-                                        alignment="vertical" 
-                                        {...this.state}>{
-                                            (ownerMatch || hoverMatch) ? this.displayScore(week) : null
-                                    }</Performance>
-                                })}
-                            </tr>
-                        )
-                    })}
+                    <tbody>
+                        <TableHeader leagueData={leagueData}/>
+                        {leagueData.map((owner, i) => {
+                            return (
+                                <tr id={owner._id} 
+                                    onMouseEnter={changeHoverFocus} 
+                                    onMouseLeave={removeHoverFocus} 
+                                    onClick={changeOwnerFocus}
+                                    key={`tr_${owner._id}_${i}`}
+                                    >
+                                    <Name key={`ownerName_${owner._id}_${i}_${Math.random()}`}>{this.displayNames(owner)}</Name>
+                                    {owner.History.map((week, j) => {
+                                        const ownerMatch = owner._id == ownerFocus
+                                        const hoverMatch = owner._id == hoverFocus
+                                        return <Performance 
+                                            key={`score_${owner._id}_${j}`} 
+                                            {...week} 
+                                            quality={quality} 
+                                            alignment="vertical" 
+                                            {...this.state}>{
+                                                (ownerMatch || hoverMatch) ? this.displayScore(week) : null
+                                        }</Performance>
+                                    })}
+                                </tr>
+                            
+                            )
+                        })}
+                    </tbody>
                 </Table>
             </div>
         )

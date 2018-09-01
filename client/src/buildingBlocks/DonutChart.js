@@ -118,9 +118,8 @@ class RadialPieChart extends Component {
 
     render() {
         const { svgSpecs } = this.props
-        const { width, height } = svgSpecs
         return (
-            <svg style={{...svgSpecs}}>
+            <svg style={{...svgSpecs, display: 'block', margin: 'auto'}}>
                 {this.state.mounted ? this.createRadialPie() : <h1>Loading</h1>}
             </svg>
         )

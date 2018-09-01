@@ -6,8 +6,10 @@ import LineChart from '../buildingBlocks/LineChart'
 import DonutChart from '../buildingBlocks/DonutChart'
 import DivSpace from '../buildingBlocks/DivSpace'
 import HeatMap from '../buildingBlocks/HeatMap'
-import { Motion, spring } from 'react-motion'
+//import { Motion, spring } from 'react-motion'
 import StatLayout from '../buildingBlocks/StatLayout'
+import DataFilters from '../buildingBlocks/DataFilters'
+//import { start } from 'repl';
 
 const Grid = styled.div`
     display: grid;
@@ -31,23 +33,31 @@ class LeagueGraphs extends Component {
             leagueData: [],
             ownerFocus: '',
             hoverFocus: '',
-            gridHeight: 375
+            gridHeight: 375,
+            weekStart: 1,
+            weekEnd: 13,
+            previousWeekStart: 1,
+            totalWeeks: 13,
+            startYear: 2017,
+            endYear: 2017,
+            lineToggle: true
         }
         this.getSpecs = this.getSpecs.bind(this)
+        this.getData = this.getData.bind(this)
         this.changeOwnerFocus = this.changeOwnerFocus.bind(this)
         this.changeHoverFocus = this.changeHoverFocus.bind(this)
         this.removeHoverFocus = this.removeHoverFocus.bind(this)
+        this.handleFilterChange = this.handleFilterChange.bind(this)
+        this.countNumWeeks = this.countNumWeeks.bind(this)
+        this.isValidated = this.isValidated.bind(this)
     }
 
     async componentDidMount() {
-        const leagueData = await this.props.getData()
-        const loaded = true;
-        this.setState({ leagueData, loaded })
+        await this.getData()
     }
 
     getSpecs(e, ref) {
         const element = ref.current
-        console.dir(element.width.baseVal.value)
         if(!this.state.svgSpecs || e) { 
             this.setState({
                 svgSpecs: {
@@ -56,6 +66,60 @@ class LeagueGraphs extends Component {
                 }
             })
         }
+    }
+
+    async getData(e) {
+        if (e) { e.preventDefault() }
+        if(!this.isValidated()) {
+            alert('\nYou are a fucking idiot.\n\nPick a valid date range.')
+            return
+        }
+
+        const { weekStart, weekEnd, startYear, endYear } = this.state
+        const leagueData = await fetch('../api/leaguecomparison', {
+          method: 'POST',
+          body: JSON.stringify({ weekStart, weekEnd, startYear, endYear })
+        })
+          .then(res => res.json())
+          .catch(err => console.log(err))
+
+        const lineToggle = !this.state.lineToggle
+        await this.setState({ 
+            leagueData, 
+            loaded: true,
+            lineToggle: !this.state.lineToggle,
+            totalWeeks: this.countNumWeeks(),
+            previousWeekStart: weekStart
+        })
+    }
+
+    countNumWeeks() {
+        const { weekStart, weekEnd, endYear, startYear } = this.state
+        const yrDiff = endYear - startYear
+        return !yrDiff ? weekEnd - weekStart + 1 : 13 - weekStart + weekEnd + (13 * (yrDiff - 1)) + 1
+    }
+
+    isValidated() {
+        const { weekStart, weekEnd, endYear, startYear } = this.state
+        const yrDiff = endYear - startYear
+        return !yrDiff ? Boolean(weekEnd >= weekStart) : Boolean(yrDiff > 0)
+    }
+
+    createArray(number, value, callback) {
+        const newArray = []
+        for(let i = 0; i < number; i++) {
+            newArray.push(value || i)
+        }
+        return callback ? newArray.map(callback) : newArray
+    }
+
+    handleFilterChange(e) {
+        e.preventDefault()
+        const targetName = e.target.id
+        const targetValue = +e.target.value || e.target.value
+        this.setState({
+            [targetName]: targetValue
+        })
     }
 
     changeOwnerFocus(e) {
@@ -77,10 +141,15 @@ class LeagueGraphs extends Component {
 
     render() {
         const { ownerFocus, gridHeight, leagueData } = this.state
+        console.log(this.state)
         return (
             <div>
                 {this.state.loaded ? (
                     <div>
+                        <DataFilters handleFilterChange={this.handleFilterChange} 
+                            getData={this.getData}
+                            createArray={this.createArray}
+                            {...this.state} />
                         <Grid ownerFocus={ownerFocus} gridHeight={gridHeight}>
                             <SvgSpace top left {...this.state} getSpecs={this.getSpecs} render={() => 
                                 <BarChart {...this.state}
@@ -105,7 +174,8 @@ class LeagueGraphs extends Component {
                                         rotation="0"
                                         changeOwnerFocus={this.changeOwnerFocus}
                                         changeHoverFocus={this.changeHoverFocus}
-                                        removeHoverFocus={this.removeHoverFocus} />
+                                        removeHoverFocus={this.removeHoverFocus}
+                                        lineToggle={this.state.lineToggle} />
                                 } />)}
                             {ownerFocus ? 
                                 <DivSpace grid={{ column: 2, row: '1 / span 2' }} render={() => (

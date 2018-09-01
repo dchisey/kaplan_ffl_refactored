@@ -4,9 +4,10 @@ const data = require('./controllers');
 const mongoose = require('mongoose');
 const WeeklyResult = require('./models');
 const path = require('path')
-
+const bodyParser = require('body-parser')
 
 module.exports = function(app) {
+	app.use(bodyParser.text())
 
 	app.get('/api/headtohead', (req, res) => {
 		const firstOwner = new RegExp(req.body.firstOwner, 'i');
@@ -18,11 +19,14 @@ module.exports = function(app) {
 		})
 	});
 
-	app.get('/api/leaguecomparison', (req, res) => {
-		const week = 14;
+	app.post('/api/leaguecomparison', (req, res) => {
+		const { weekStart, weekEnd, startYear, endYear } = JSON.parse(req.body)
 		WeeklyResult.aggregate([
 			{
-				$match: { Week: { $lte: week }}
+				$match: { Week: { $gte: weekStart, $lte: weekEnd }}
+			},
+			{
+				$sort: { Week: 1 }
 			},
 			{
 				$group: {
@@ -45,6 +49,7 @@ module.exports = function(app) {
 						MeanMinus: '$MeanMinus',
 						Inferior: '$Inferior',
 						Abyssmal: '$Abyssmal',
+						Week: '$Week',
 						WeeklyQS: { 
 							$sum: [
 								'$Elite',
@@ -59,7 +64,7 @@ module.exports = function(app) {
 			},
 			{ $sort: { Pts: 1 }}
 		], (err, data) => {
-			console.log(data);
+			console.log(data[0].History)
 			console.log(err)
 			res.json(data);
 		});

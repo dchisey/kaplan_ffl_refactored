@@ -38,7 +38,7 @@ export default class Line extends Component {
 
 
     render() {
-        const { dotHover, lineHover, lineStyle, dotRadius } = this.state
+        const { dotRadius } = this.state
         const { 
             line, 
             history, 
@@ -51,7 +51,8 @@ export default class Line extends Component {
             hoverFocus,
             changeOwnerFocus, 
             changeHoverFocus, 
-            removeHoverFocus
+            removeHoverFocus,
+            previousWeekStart
         } = this.props
 
         return (
@@ -62,14 +63,16 @@ export default class Line extends Component {
                     onMouseEnter={changeHoverFocus}
                     onMouseLeave={removeHoverFocus}
                     id={owner}
+                    key={`path_${owner}`}
                     ownerFocus={ownerFocus}
                     onClick={changeOwnerFocus}
                     ownerFocused={owner == ownerFocus}
-                    ownerHovered={owner == hoverFocus}></Path>
+                    ownerHovered={owner == hoverFocus} />
                 {owner == ownerFocus || owner == hoverFocus ? history.map((week, i) => <circle 
                     r={dotRadius}
+                    key={`dot_${i}`}
                     fill={owner == ownerFocus ? 'blue' : 'green'}
-                    cx={xScale(i + 1)} 
+                    cx={xScale(i + previousWeekStart)}
                     cy={yScale(week[stat]) + margin.top}
                     onMouseEnter={this.handleDotHover}
                     onMouseLeave={this.handleDotLeave}></circle>)

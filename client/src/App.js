@@ -37,13 +37,6 @@ class App extends Component {
         }
       ]
     }
-    this.getData = this.getData.bind(this);
-  }
-
-  async getData() {
-    return await fetch('../api/leaguecomparison')
-      .then(res => res.json())
-      .catch(err => console.log(err))
   }
 
   render() {
@@ -59,7 +52,7 @@ class App extends Component {
           </Title>
           <Switch>
               <Route path="/ownerperformance" component={OwnerPerformance}/>
-              <Route path="/leaguegraphs" component={() => <LeagueGraphs getData={this.getData} />} />
+              <Route path="/leaguegraphs" component={() => <LeagueGraphs />} />
               <Route path="/" component={() => components.map(component => AnalysisOption(component))} />
           </Switch>
         </div>
