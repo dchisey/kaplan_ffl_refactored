@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import BarChart from './BarChart'
-import LineChart from './LineChart'
 import styled from 'styled-components'
-import { Spring } from 'react-spring'
-import { Motion, spring } from 'react-motion'
 
 const Svg = styled.svg`
     height: 100%;
@@ -36,17 +32,13 @@ export default class SvgSpace extends Component {
     }
 
     findAlignment() {
-        const { bottom, top, left, right } = this.props
+        const { bottom, right } = this.props
         const row = bottom ? 2 : 1
         const column = right ? 2 : 1
         return { row, column }
     }
 
     render() {
-        const textStyle = {
-            fill: 'black',
-            fontSize: '20px'
-        }
         return (
             <Svg {...this.props} findAlignment={this.findAlignment} innerRef={this.svg}>
                 {this.state.mounted ? this.props.render() : <h1>Still Loading...</h1>}              

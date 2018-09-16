@@ -13,7 +13,7 @@ class BarChart extends Component {
             margin: {
                 top: 50,
                 right: 20,
-                bottom: 105,
+                bottom: 110,
                 left: 50
             },
             padding: 2
@@ -38,7 +38,10 @@ class BarChart extends Component {
         const { stat, margin } = this.state
 
         const xScale = d3.scaleBand()
-            .domain(leagueData.map(entry => entry._id.split(' ')[0]))
+            .domain(leagueData.map(entry => {
+                const names = entry._id.split(' ')
+                return `${names[0]} ${names.length > 1 ? names[1][0] : ''}`
+            }))
             .rangeRound([0, width - margin.right - margin.left])
             
         const yScale = d3.scaleLinear()

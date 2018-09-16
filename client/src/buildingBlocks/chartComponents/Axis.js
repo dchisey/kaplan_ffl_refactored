@@ -9,8 +9,6 @@ class Axis extends Component {
     }
 
     componentDidMount() {
-        console.log('mounted')
-        console.log(this.props.ticks)
         this.createAxis()
     }
 
@@ -20,16 +18,17 @@ class Axis extends Component {
 
     createAxis() {
         const currAxis = this.currAxis.current;
-        const { scale, orient, dimensions, rotation, ticks } = this.props;
-        const { width, height, margin } = dimensions;
-        const isX = orient == 'x'
+        const { scale, orient, dimensions, rotation, ticks, totalWeeks } = this.props;
+        const { height, margin } = dimensions;
+        const isX = orient === 'x'
         const scaledAxis = isX ? d3.axisBottom(scale) : d3.axisLeft(scale);
-        const textAnchor = +rotation ? 'end' : 'middle'
+        const textAnchor = +rotation ? 'end' : 'middle'     
 
-        const formattedTicks = scaledAxis.tickValues(ticks)
-
-        if(ticks && typeof ticks[0] == 'number') {
-            formattedTicks.tickFormat(d3.format('d'))
+        // if(ticks && typeof ticks[0] == 'number') {
+        //     formattedTicks.tickFormat(d3.format('d'))
+        // }
+        if(ticks) {
+            scaledAxis.tickValues(ticks)
         }
         
         if(isX) {
@@ -38,6 +37,11 @@ class Axis extends Component {
               .selectAll('text')  
                 .attr('text-anchor', textAnchor)
                 .attr('transform', `rotate(${rotation})`)
+                .attr('display', (d, i) => {
+                    if(totalWeeks > 26 && i % 4) {
+                        return 'none'
+                    }
+                })
         } else {
             d3.select(currAxis).call(scaledAxis)
                 .attr('transform', `translate(0, ${margin.top})`)

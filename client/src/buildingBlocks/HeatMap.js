@@ -30,24 +30,18 @@ const Performance = styled.td`
         switch(props.WeeklyQS) {
             case 3:
                 return props.quality[5].color;
-                break;
             case 2:
                 return props.quality[4].color;
-                break;
             case 1:
                 return props.quality[3].color;
-                break;
             case -3:
                 return props.quality[0].color;
-                break;
             case -2:
                 return props.quality[1].color;
-                break;
             case -1:
                 return props.quality[2].color;
-                break;
             default:
-                return 'white';
+                return 'rgba(0, 0, 0, 0.2)';
         }
     }};
     width: ${props => {
@@ -76,9 +70,10 @@ export default class HeatMap extends Component {
 
     displayScore(week) {
         const width = window.innerWidth;
-        if(width > 825) {
+        const numWeeks = this.props.weekArray.length
+        if(width > 825 && week && numWeeks <= 13) {
             return week.Pts
-        } else if(width > 750) {
+        } else if(width > 750 && week && numWeeks <= 26) {
             return week.Pts.toFixed();
         } else {
             return null
@@ -87,7 +82,7 @@ export default class HeatMap extends Component {
 
     displayNames(owner) {
         const width = window.innerWidth;
-        const ownerArray = owner._id.split(' ')
+        const ownerArray = owner.name.split(' ')
         if(width < 450) {
             return ownerArray.map(name => name[0]).join('')
         }
@@ -96,7 +91,9 @@ export default class HeatMap extends Component {
     }
 
     render() {
-        const { leagueData, ownerFocus, hoverFocus, totalWeeks, changeHoverFocus, changeOwnerFocus, removeHoverFocus } = this.props
+        const { ownerFocus, hoverFocus, 
+            changeHoverFocus, changeOwnerFocus, 
+            removeHoverFocus, dateSetData } = this.props
         const quality = [
             { type: 'Abysmal', color: '#C11C17' }, 
             { type: 'Inferior', color: '#DE5003' }, 
@@ -105,7 +102,6 @@ export default class HeatMap extends Component {
             { type: 'Superior', color: '#228B22' }, 
             { type: 'Elite', color: '#4169e1' }
         ];
-        const width = window.innerWidth
 
         return (
             <div>
@@ -114,20 +110,20 @@ export default class HeatMap extends Component {
                 <Table>
                     <tbody>
                         <TableHeader {...this.props}/>
-                        {leagueData.map((owner, i) => {
+                        {dateSetData.map((owner, i) => {
                             return (
-                                <tr id={owner._id} 
+                                <tr id={owner.name} 
                                     onMouseEnter={changeHoverFocus} 
                                     onMouseLeave={removeHoverFocus} 
                                     onClick={changeOwnerFocus}
-                                    key={`tr_${owner._id}_${i}`}
+                                    key={`tr_${owner.name}_${i}`}
                                     >
-                                    <Name key={`ownerName_${owner._id}_${i}_${Math.random()}`}>{this.displayNames(owner)}</Name>
-                                    {owner.History.map((week, j) => {
-                                        const ownerMatch = owner._id == ownerFocus
-                                        const hoverMatch = owner._id == hoverFocus
+                                    <Name key={`ownerName_${owner.name}_${i}`}>{this.displayNames(owner)}</Name>
+                                    {owner.history.map((week, j) => {
+                                        const ownerMatch = owner.name === ownerFocus
+                                        const hoverMatch = owner.name === hoverFocus
                                         return <Performance 
-                                            key={`score_${owner._id}_${j}`} 
+                                            key={`score_${owner.name}_${j}`} 
                                             {...week} 
                                             quality={quality} 
                                             alignment="vertical" 

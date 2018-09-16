@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Transition, config } from 'react-spring';
 
 const Div = styled.div`
     background: #ede8e8;

@@ -15,7 +15,7 @@ export default class LineChart extends Component {
                 bottom: 105,
                 left: 50
             },
-            padding: 2
+            padding: 2,
         }
         this.createGraph = this.createGraph.bind(this)
         this.buildScales = this.buildScales.bind(this)
@@ -33,25 +33,32 @@ export default class LineChart extends Component {
     }
 
     buildScales(e, nextProps) {
-        const { leagueData, weekStart, weekEnd } = nextProps || this.props
+        const { totalWeeks, ticks } = nextProps || this.props
         const { svgSpecs } = this.props
         const { height, width } = svgSpecs
-        const { margin, stat } = this.state
-        const everyWkScore = leagueData.map(owner => owner.History.map(wk => wk.Pts))
-        const flattenedScores = [].concat.apply([], everyWkScore)
+        const { margin } = this.state
+        //const everyWkScore = leagueData.map(owner => owner.map(wk => wk.Pts))
+        //const flattenedScores = [].concat.apply([], dateSetData.map(d => d.history))
+        const xScale = d3.scaleBand()
+            .domain(ticks)
+            .range([0, width - margin.left - margin.right])
 
-        const xScale = d3.scaleLinear()
-            .domain([weekStart, weekEnd])
+        const lineScale = d3.scaleLinear()
+            .domain([0, totalWeeks])
             .range([0, width - margin.left - margin.right])
 
         const yScale = d3.scaleLinear()
-            .domain(d3.extent(flattenedScores).reverse())
+            .domain(d3.extent([0, 200]).reverse())
             .rangeRound([0, height - margin.bottom])
             .nice()
-
         const line = d3.line()
-            .x((d, i) => xScale(i + weekStart))
-            .y((d, i) => yScale(d[stat]) + margin.top)
+            .defined(d => d !== undefined)
+            .x((d, i) => {
+                return lineScale(i + 1 / 2)
+            })
+            .y((d, i) => {
+                return yScale(d.Pts) + margin.top
+            })
             .curve(d3.curveMonotoneX)
                
         this.setState({
@@ -59,6 +66,7 @@ export default class LineChart extends Component {
             width,
             xScale,
             yScale,
+            lineScale,
             line,
             mounted: true
         })
@@ -68,13 +76,15 @@ export default class LineChart extends Component {
         const { xScale, yScale, margin, width, height } = this.state
         const { leagueData, ownerFocus, hoverFocus, changeOwnerFocus, 
                 changeHoverFocus, removeHoverFocus, title, rotation,
-                weekArray, previousWeekStart  } = this.props
+                totalWeeks, dateSetData, ticks, previousWeekStart  } = this.props
         const textStyle = {
             fill: 'black',
             fontSize: '25px',
             fontWeight: 'bold',
             textAnchor: 'middle'
         }
+
+
         return (
             <g transform={`translate(${margin.left}, 0)`}>
                 <Axis scale={xScale} 
@@ -82,19 +92,21 @@ export default class LineChart extends Component {
                     dimensions={{ width, height, margin }} 
                     leagueData={leagueData}
                     rotation={rotation}
-                    ticks={weekArray} />
+                    ticks={ticks}
+                    totalWeeks={totalWeeks} />
                 <Axis scale={yScale}
                     orient="y" 
                     dimensions={{ width, height, margin }} 
                     leagueData={leagueData} />
-                {leagueData.map((owner, index) => {
-                    const history = owner.History
+                {dateSetData.map((owner, index) => {
+                    const history = owner.history
                     return <Line 
                         {...this.state}
                         history={history} 
+                        ticks={ticks}
                         ownerFocus={ownerFocus} 
                         hoverFocus={hoverFocus}
-                        owner={owner._id} 
+                        owner={owner.name} 
                         previousWeekStart={previousWeekStart}
                         changeOwnerFocus={changeOwnerFocus}
                         changeHoverFocus={changeHoverFocus}
@@ -110,7 +122,6 @@ export default class LineChart extends Component {
     }
 
     render() {
-
         return (
             <g>
                 {this.state.mounted ? this.createGraph() : <h1>eat ass</h1>}

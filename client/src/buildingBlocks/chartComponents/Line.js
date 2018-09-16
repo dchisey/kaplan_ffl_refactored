@@ -42,18 +42,17 @@ export default class Line extends Component {
         const { 
             line, 
             history, 
-            xScale, 
             yScale, 
-            stat, 
+            lineScale,
             margin, 
             owner, 
             ownerFocus,
             hoverFocus,
             changeOwnerFocus, 
             changeHoverFocus, 
-            removeHoverFocus,
-            previousWeekStart
+            removeHoverFocus
         } = this.props
+
 
         return (
             <g>
@@ -66,17 +65,25 @@ export default class Line extends Component {
                     key={`path_${owner}`}
                     ownerFocus={ownerFocus}
                     onClick={changeOwnerFocus}
-                    ownerFocused={owner == ownerFocus}
-                    ownerHovered={owner == hoverFocus} />
-                {owner == ownerFocus || owner == hoverFocus ? history.map((week, i) => <circle 
-                    r={dotRadius}
-                    key={`dot_${i}`}
-                    fill={owner == ownerFocus ? 'blue' : 'green'}
-                    cx={xScale(i + previousWeekStart)}
-                    cy={yScale(week[stat]) + margin.top}
-                    onMouseEnter={this.handleDotHover}
-                    onMouseLeave={this.handleDotLeave}></circle>)
-                : null}
+                    ownerFocused={owner === ownerFocus}
+                    ownerHovered={owner === hoverFocus} />
+                {owner === ownerFocus || owner === hoverFocus ? history.map((week, i) => {
+                    if(week) {
+                        return (
+                            <circle 
+                                r={dotRadius}
+                                key={`dot_${i}`}
+                                fill={owner === ownerFocus ? 'blue' : 'green'}
+                                cx={lineScale(i + 1 / 2)}
+                                cy={yScale(week.Pts) + margin.top}
+                                onMouseEnter={this.handleDotHover}
+                                onMouseLeave={this.handleDotLeave}>
+                            </circle>
+                        )
+                    } else { 
+                        return null 
+                    }
+                }) : null}
             </g>
         )
     }

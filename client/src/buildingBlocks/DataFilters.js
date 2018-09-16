@@ -75,18 +75,19 @@ const Select = ({ number, customData, handleFilterChange, filterId, value, label
 
 export default class DataFilters extends Component {
     render() {
-        const { weekStart, weekEnd } = this.props
+        const { weekStart, weekEnd, startYear, endYear } = this.props
+        const years = [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018]
         return (
             <FilterModule onSubmit={this.props.getData}>
                 <Filter>
                     <Title>Week Start</Title>
                     <Select {...this.props} filterId="weekStart" value={weekStart} number={13} label="Week" />
-                    <Select {...this.props} filterId="startYear" customData={[2017]} label="Year"/> 
+                    <Select {...this.props} filterId="startYear" value={startYear} customData={years} label="Year"/> 
                 </Filter>
                 <Filter>
                     <Title>Week End</Title>
                     <Select {...this.props} filterId="weekEnd" value={weekEnd} number={13} label="Week"/>
-                    <Select {...this.props} filterId="endYear" customData={[2017]} label="Year"/>  
+                    <Select {...this.props} filterId="endYear" value={endYear} customData={years} label="Year"/>  
                 </Filter>
                 <Button type="submit">Set Range</Button>
             </FilterModule>

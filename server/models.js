@@ -5,6 +5,7 @@ let Schema = mongoose.Schema;
 
 let resultSchema = new Schema({
 	owner: String,
+	year: Number,
 	pts: Number,
 	week: Number,
 	seasonAvg: Number,

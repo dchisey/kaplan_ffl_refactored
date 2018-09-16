@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 import styled from 'styled-components';
 
 const Rect = styled.rect`
@@ -50,8 +49,8 @@ export default class Bar extends Component {
                 onClick={changeOwnerFocus}
                 id={owner}
                 ownerFocus={ownerFocus}
-                ownerFocused={owner == ownerFocus}
-                ownerHovered={owner == hoverFocus}/>
+                ownerFocused={owner === ownerFocus}
+                ownerHovered={owner === hoverFocus}/>
         )
     }
 }

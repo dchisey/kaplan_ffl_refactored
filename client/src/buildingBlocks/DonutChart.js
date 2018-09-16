@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Arc from './chartComponents/Arc';
 import * as d3 from 'd3'
 
 class RadialPieChart extends Component {
@@ -33,22 +32,16 @@ class RadialPieChart extends Component {
         switch(history.WeeklyQS) {
             case 3:
                 return 'Elite';
-                break;
             case 2:
                 return 'Superior';
-                break;
             case 1:
                 return 'MeanPlus';
-                break;
             case -3:
                 return 'Abyssmal';
-                break;
             case -2:
                 return 'Inferior';
-                break;
             case -1:
                 return 'MeanMinus';
-                break;
             default:
                 return;
         }
@@ -66,7 +59,7 @@ class RadialPieChart extends Component {
         const { svgSpecs } = this.props
         const { width, height } = svgSpecs
         const radius = Math.min(width, height) / 2;
-        const data = typeof this.props.data == 'object'
+        const data = typeof this.props.data === 'object'
             ? Object.entries(this.aggregateStats(this.props.data.History))
             : this.props.data
         const arc = d3.arc().innerRadius(radius - 20).outerRadius(radius - 70)
@@ -91,14 +84,14 @@ class RadialPieChart extends Component {
         return (
             //randomly generates a key to trigger the diff and re-translate the <g>
             <g key={Math.random()} style={{ transform: `translate(50%, 50%)` }}>
-                {filteredPie.map(stat => {
+                {filteredPie.map((stat, i) => {
                     const textCoordinates = arc.centroid(stat)
                     const textTranslation = `translate(${textCoordinates})translate(-2,2)`
                     const color = quality.filter(qual => {
-                        if(qual.type == stat.data[0]) return qual.color
+                        if(qual.type === stat.data[0]) return qual.color;
                     })[0].color
                     return (
-                        <g>
+                        <g key={`arc_${i}_g`}>
                             <path d={arc({
                                 startAngle: stat.startAngle,
                                 endAngle: stat.endAngle,
@@ -108,7 +101,7 @@ class RadialPieChart extends Component {
                         </g>
                 )})}
                 <text x='0' y='-48' style={{ textAnchor: 'middle', fontSize: 24, fontWeight: 700 }}>
-                    <tspan x='0' dy='1.2em'>SEASON</tspan>
+                    <tspan x='0' dy='1.2em'>AGGREGATE</tspan>
                     <tspan x='0' dy='1.2em'>QUALITY</tspan>
                     <tspan x='0' dy='1.4em' style={{ fontSize: 30 }}>{totalQs}</tspan>
                 </text>

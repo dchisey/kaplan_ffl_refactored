@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import SvgSpace, { SpringSvg } from '../buildingBlocks/SvgSpace'
+import SvgSpace from '../buildingBlocks/SvgSpace'
 import BarChart from '../buildingBlocks/BarChart'
 import LineChart from '../buildingBlocks/LineChart'
 import DonutChart from '../buildingBlocks/DonutChart'
 import DivSpace from '../buildingBlocks/DivSpace'
 import HeatMap from '../buildingBlocks/HeatMap'
-//import { Motion, spring } from 'react-motion'
 import StatLayout from '../buildingBlocks/StatLayout'
 import DataFilters from '../buildingBlocks/DataFilters'
-//import { start } from 'repl';
 
 const Grid = styled.div`
     display: grid;
@@ -35,11 +33,11 @@ class LeagueGraphs extends Component {
             hoverFocus: '',
             gridHeight: 375,
             weekStart: 1,
-            weekEnd: 13,
+            weekEnd: 1,
             previousWeekStart: 1,
             totalWeeks: 13,
-            startYear: 2017,
-            endYear: 2017,
+            startYear: 2009,
+            endYear: 2018,
             lineToggle: true
         }
         this.getSpecs = this.getSpecs.bind(this)
@@ -57,7 +55,6 @@ class LeagueGraphs extends Component {
     }
 
     getSpecs(e, ref) {
-        const element = ref.current
         if(!this.state.svgSpecs || e) { 
             this.setState({
                 svgSpecs: {
@@ -84,16 +81,33 @@ class LeagueGraphs extends Component {
           .catch(err => console.log(err))
 
         const totalWeeks = this.countNumWeeks()
-        await this.setState({ 
+        const weekArray = this.createArray(totalWeeks, false, (item, i) => {
+            const totalWeeks = weekStart + i
+            const week = totalWeeks % 13 || 13
+            const year = Math.floor(totalWeeks / 13 - .01) + startYear
+            return { week, year }
+        })
+        const ticks = weekArray.map(date => `${date.week}.${date.year}`)
+        const dateSetData = leagueData.map(owner => {
+            const history = owner.History
+            const index = ticks.indexOf(`${history[0].Week}.${history[0].Year}`)
+            const reformattedData = this.createArray(totalWeeks, undefined)
+            reformattedData.splice(index, history.length, ...history) 
+            return {
+                name: owner._id,
+                history: reformattedData
+            } 
+        })
+
+        await this.setState({
             leagueData, 
             totalWeeks,
             loaded: true,
             lineToggle: !this.state.lineToggle,
             previousWeekStart: weekStart,
-            weekArray: this.createArray(totalWeeks, false, (item, i) => {
-                const weekDisplayed = weekStart + i
-                return weekDisplayed <= 13 ? weekDisplayed : weekDisplayed - 13
-            })
+            weekArray,
+            ticks,
+            dateSetData 
         })
     }
 
@@ -112,7 +126,11 @@ class LeagueGraphs extends Component {
     createArray(number, value, callback) {
         const newArray = []
         for(let i = 0; i < number; i++) {
-            newArray.push(value || i)
+            if(value || value === undefined || value === null) {
+                newArray.push(value)
+            } else {
+                newArray.push(i)
+            }
         }
         return callback ? newArray.map(callback) : newArray
     }
@@ -128,7 +146,7 @@ class LeagueGraphs extends Component {
 
     changeOwnerFocus(e) {
         e.preventDefault()
-        const ownerAlreadyChosen = this.state.ownerFocus == e.target.id
+        const ownerAlreadyChosen = this.state.ownerFocus === e.target.id
         const id = e.target.id ? e.target.id : e.target.parentNode.id
         if(ownerAlreadyChosen) this.setState({ ownerFocus: '' })
         else this.setState({ ownerFocus: id })
@@ -145,7 +163,6 @@ class LeagueGraphs extends Component {
 
     render() {
         const { ownerFocus, gridHeight, leagueData } = this.state
-        console.log(this.state)
         return (
             <div>
                 {this.state.loaded ? (
@@ -167,7 +184,7 @@ class LeagueGraphs extends Component {
                                 (<SvgSpace bottom left getSpecs={this.getSpecs} render={() => 
                                     <LineChart {...this.state} 
                                         title="Weekly Points Trend" 
-                                        rotation="0"
+                                        rotation="-45"
                                         changeOwnerFocus={this.changeOwnerFocus}
                                         changeHoverFocus={this.changeHoverFocus}
                                         removeHoverFocus={this.removeHoverFocus} />
@@ -175,18 +192,17 @@ class LeagueGraphs extends Component {
                                 : (<SvgSpace top right getSpecs={this.getSpecs} render={() => 
                                     <LineChart {...this.state} 
                                         title="Weekly Points Trend" 
-                                        rotation="0"
+                                        rotation="-45"
                                         changeOwnerFocus={this.changeOwnerFocus}
                                         changeHoverFocus={this.changeHoverFocus}
-                                        removeHoverFocus={this.removeHoverFocus}
-                                        lineToggle={this.state.lineToggle} />
+                                        removeHoverFocus={this.removeHoverFocus} />
                                 } />)}
                             {ownerFocus ? 
                                 <DivSpace grid={{ column: 2, row: '1 / span 2' }} render={() => (
                                     <div>
                                         <Title>{ownerFocus}</Title>
                                         <DonutChart {...this.state} {...this.props} 
-                                            data={leagueData.filter(owner => owner._id == ownerFocus)[0]}
+                                            data={leagueData.filter(owner => owner._id === ownerFocus)[0]}
                                         />
                                         <StatLayout {...this.state} {...this.props} />
                                     </div>

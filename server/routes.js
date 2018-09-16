@@ -23,10 +23,17 @@ module.exports = function(app) {
 		const { weekStart, weekEnd, startYear, endYear } = JSON.parse(req.body)
 		WeeklyResult.aggregate([
 			{
-				$match: { Week: { $gte: weekStart, $lte: weekEnd }}
+				$match: 
+				{ 
+					$or: [
+						{ Year: startYear, Week: { $gte: weekStart} },
+						{ Year: { $gt: startYear, $lt: endYear } },
+						{ Year: endYear, Week: { $lte: weekEnd } }
+					]
+				}
 			},
 			{
-				$sort: { Week: 1 }
+				$sort: { Year: 1, Week: 1 }
 			},
 			{
 				$group: {
@@ -41,6 +48,7 @@ module.exports = function(app) {
 					Abyssmal: { $sum: '$Abyssmal' },
 					High: { $max: '$Pts' },
 					Low: { $min: '$Pts' },
+					Year: { $max: '$Year' },
 					History: { $push: { 
 						Pts: '$Pts',
 						Elite: '$Elite',
@@ -50,6 +58,7 @@ module.exports = function(app) {
 						Inferior: '$Inferior',
 						Abyssmal: '$Abyssmal',
 						Week: '$Week',
+						Year: '$Year',
 						WeeklyQS: { 
 							$sum: [
 								'$Elite',
@@ -62,10 +71,34 @@ module.exports = function(app) {
 					 }}
 				}
 			},
+			// {
+			// 	$redact: {
+			// 		$cond: {
+			// 			if: {
+			// 				$or: [
+			// 				{
+			// 					$and: [
+			// 						{ $lt: [weekStart] },
+			// 						{ $eq: [startYear] }
+			// 					]
+			// 				},
+			// 				{
+			// 					$and: [
+			// 						{ $gt: [weekEnd] },
+			// 						{ $eq: [endYear] }
+			// 					]
+			// 				}
+			// 			],
+			// 			then: '$$PRUNE',
+			// 			else: '$$KEEP'
+			// 			}
+			// 		}
+			// 	}
+			// },
 			{ $sort: { Pts: 1 }}
 		], (err, data) => {
-			console.log(data[0].History)
 			console.log(err)
+			console.log(data)
 			res.json(data);
 		});
 	});
