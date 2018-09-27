@@ -6,7 +6,7 @@ import {
 	Link
 } from 'react-router-dom';
 import styled from 'styled-components';
-import OwnerPerformance from './pages/OwnerPerformance';
+import Leaderboard from './pages/Leaderboard';
 import LeagueGraphs from './pages/LeagueGraphs';
 //import AnalysisOptions from './pages/';
 import AnalysisOption from './buildingBlocks/AnalysisOption';
@@ -30,10 +30,10 @@ class App extends Component {
           path:'/leaguegraphs'
         },
         { 
-          title: 'Owner Performance', 
-          description: 'See how each owner compares to other leaguemates.', 
+          title: 'Leaderboards', 
+          description: 'Find the best and worst performances in league history.', 
           key: 1,
-          path:'/ownerperformance'
+          path:'/leaderboard'
         }
       ]
     }
@@ -51,7 +51,7 @@ class App extends Component {
             </Link>
           </Title>
           <Switch>
-              <Route path="/ownerperformance" component={OwnerPerformance}/>
+              <Route path="/Leaderboard" component={Leaderboard}/>
               <Route path="/leaguegraphs" component={() => <LeagueGraphs />} />
               <Route path="/" component={() => components.map(component => AnalysisOption(component))} />
           </Switch>

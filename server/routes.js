@@ -9,28 +9,22 @@ const bodyParser = require('body-parser')
 module.exports = function(app) {
 	app.use(bodyParser.text())
 
-	app.get('/api/headtohead', (req, res) => {
-		const firstOwner = new RegExp(req.body.firstOwner, 'i');
-		const secondOwner = new RegExp(req.body.secondOwner, 'i');
-
-		WeeklyResult.find({}, (err, data) => {
-			res.send(data)
-			console.log(err)
-		})
-	});
-
 	app.post('/api/leaguecomparison', (req, res) => {
-		const { weekStart, weekEnd, startYear, endYear } = JSON.parse(req.body)
-		WeeklyResult.aggregate([
-			{
-				$match: 
-				{ 
-					$or: [
-						{ Year: startYear, Week: { $gte: weekStart} },
-						{ Year: { $gt: startYear, $lt: endYear } },
+		const { weekStart, weekEnd, startYear, endYear, weeksIncluded } = JSON.parse(req.body)
+		console.log(`Include postseason: ${weeksIncluded}`)
+		const matchQuery = startYear === endYear ? 
+					[
+						{ Year: startYear, Week: { $gte: weekStart, $lte: weekEnd } }
+					]
+					: [
+						{ Year: startYear, Week: { $gte: weekStart, $lte: weeksIncluded } },
+						{ Year: { $gt: startYear, $lt: endYear }, Week: { $lte: weeksIncluded } },
 						{ Year: endYear, Week: { $lte: weekEnd } }
 					]
-				}
+		
+		WeeklyResult.aggregate([
+			{
+				$match: { $or: matchQuery }
 			},
 			{
 				$sort: { Year: 1, Week: 1 }
@@ -71,34 +65,9 @@ module.exports = function(app) {
 					 }}
 				}
 			},
-			// {
-			// 	$redact: {
-			// 		$cond: {
-			// 			if: {
-			// 				$or: [
-			// 				{
-			// 					$and: [
-			// 						{ $lt: [weekStart] },
-			// 						{ $eq: [startYear] }
-			// 					]
-			// 				},
-			// 				{
-			// 					$and: [
-			// 						{ $gt: [weekEnd] },
-			// 						{ $eq: [endYear] }
-			// 					]
-			// 				}
-			// 			],
-			// 			then: '$$PRUNE',
-			// 			else: '$$KEEP'
-			// 			}
-			// 		}
-			// 	}
-			// },
 			{ $sort: { Pts: 1 }}
 		], (err, data) => {
 			console.log(err)
-			console.log(data)
 			res.json(data);
 		});
 	});

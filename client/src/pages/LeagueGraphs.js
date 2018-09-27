@@ -8,6 +8,7 @@ import DivSpace from '../buildingBlocks/DivSpace'
 import HeatMap from '../buildingBlocks/HeatMap'
 import StatLayout from '../buildingBlocks/StatLayout'
 import DataFilters from '../buildingBlocks/DataFilters'
+import { runInThisContext } from 'vm';
 
 const Grid = styled.div`
     display: grid;
@@ -38,7 +39,8 @@ class LeagueGraphs extends Component {
             totalWeeks: 13,
             startYear: 2009,
             endYear: 2018,
-            lineToggle: true
+            lineToggle: true,
+            weeksIncluded: 15
         }
         this.getSpecs = this.getSpecs.bind(this)
         this.getData = this.getData.bind(this)
@@ -48,6 +50,7 @@ class LeagueGraphs extends Component {
         this.handleFilterChange = this.handleFilterChange.bind(this)
         this.countNumWeeks = this.countNumWeeks.bind(this)
         this.isValidated = this.isValidated.bind(this)
+        this.handleRegPostToggle = this.handleRegPostToggle.bind(this)
     }
 
     async componentDidMount() {
@@ -72,27 +75,39 @@ class LeagueGraphs extends Component {
             return
         }
 
-        const { weekStart, weekEnd, startYear, endYear } = this.state
+        const { weekStart, weekEnd, startYear, endYear, weeksIncluded } = this.state
         const leagueData = await fetch('../api/leaguecomparison', {
           method: 'POST',
-          body: JSON.stringify({ weekStart, weekEnd, startYear, endYear })
+          body: JSON.stringify({ weekStart, weekEnd, startYear, endYear, weeksIncluded })
         })
           .then(res => res.json())
           .catch(err => console.log(err))
 
         const totalWeeks = this.countNumWeeks()
         const weekArray = this.createArray(totalWeeks, false, (item, i) => {
-            const totalWeeks = weekStart + i
-            const week = totalWeeks % 13 || 13
-            const year = Math.floor(totalWeeks / 13 - .01) + startYear
+            const weekIndex = weekStart + i
+            const week = weekIndex % weeksIncluded || weeksIncluded
+            const year = Math.floor(weekIndex / weeksIncluded - .01) + startYear
             return { week, year }
         })
+        //remove week 15 for 2009
+        const indexWk152009 = weekArray.findIndex(date => {
+            return date.week === 15 && date.year === 2009
+        })
+        if(indexWk152009 >= 0) {
+            weekArray.splice(indexWk152009, 1)
+        }
+
         const ticks = weekArray.map(date => `${date.week}.${date.year}`)
+        console.log(ticks)
         const dateSetData = leagueData.map(owner => {
             const history = owner.History
             const index = ticks.indexOf(`${history[0].Week}.${history[0].Year}`)
             const reformattedData = this.createArray(totalWeeks, undefined)
             reformattedData.splice(index, history.length, ...history) 
+            if(indexWk152009 >= 0) {
+                reformattedData.splice(-1, 1)
+            }
             return {
                 name: owner._id,
                 history: reformattedData
@@ -112,9 +127,9 @@ class LeagueGraphs extends Component {
     }
 
     countNumWeeks() {
-        const { weekStart, weekEnd, endYear, startYear } = this.state
+        const { weekStart, weekEnd, endYear, startYear, weeksIncluded } = this.state
         const yrDiff = endYear - startYear
-        return !yrDiff ? weekEnd - weekStart + 1 : 13 - weekStart + weekEnd + (13 * (yrDiff - 1)) + 1
+        return !yrDiff ? weekEnd - weekStart + 1 : weeksIncluded - weekStart + weekEnd + (weeksIncluded * (yrDiff - 1)) + 1
     }
 
     isValidated() {
@@ -144,6 +159,13 @@ class LeagueGraphs extends Component {
         })
     }
 
+    handleRegPostToggle(e) {
+        const includePostseason = e.target.checked
+        this.setState({
+            weeksIncluded: includePostseason ? 15 : 13
+        })
+    }
+
     changeOwnerFocus(e) {
         e.preventDefault()
         const ownerAlreadyChosen = this.state.ownerFocus === e.target.id
@@ -163,6 +185,7 @@ class LeagueGraphs extends Component {
 
     render() {
         const { ownerFocus, gridHeight, leagueData } = this.state
+        console.log(this.state.dateSetData)
         return (
             <div>
                 {this.state.loaded ? (
@@ -170,6 +193,7 @@ class LeagueGraphs extends Component {
                         <DataFilters handleFilterChange={this.handleFilterChange} 
                             getData={this.getData}
                             createArray={this.createArray}
+                            handleRegPostToggle={this.handleRegPostToggle}
                             {...this.state} />
                         <Grid ownerFocus={ownerFocus} gridHeight={gridHeight}>
                             <SvgSpace top left {...this.state} getSpecs={this.getSpecs} render={() => 
@@ -223,6 +247,5 @@ class LeagueGraphs extends Component {
         )
     }
 }
-
 
 export default LeagueGraphs;

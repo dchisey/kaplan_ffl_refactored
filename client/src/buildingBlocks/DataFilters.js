@@ -13,8 +13,8 @@ const FilterModule = styled.form`
 `
 
 const Filter = styled.div`
-    width: 35%;
-    margin: 10px;
+
+    margin: 10px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,13 +52,17 @@ const Button = styled.button`
     font-family: 'Bungee Hairline', sans-serif;
     padding: 10px;
     font-size: 1.2em;
-    margin: 10px;
+    margin: 10px 20px;
     line-height: 1;
     outline: none;
 `
 
 const Option = styled.option`
     background-color: rgba(0, 0, 0, 0.8);
+`
+
+const Checkbox = styled.div`
+    margin: 10px 20px;
 `
 
 const Select = ({ number, customData, handleFilterChange, filterId, value, label, createArray }) => {
@@ -73,22 +77,33 @@ const Select = ({ number, customData, handleFilterChange, filterId, value, label
     )
 }
 
+const RegPostseasonToggle = ({ weeksIncluded, handleRegPostToggle }) => {
+    const includePostseason = weeksIncluded === 15
+    return (
+        <Checkbox>
+            <input name="reg" onChange={handleRegPostToggle} checked={includePostseason} type="checkbox" />
+            <label for='reg'>Include Postseason</label>
+        </Checkbox>
+    )
+}
+
 export default class DataFilters extends Component {
     render() {
-        const { weekStart, weekEnd, startYear, endYear } = this.props
+        const { weekStart, weekEnd, startYear, endYear, weeksIncluded } = this.props
         const years = [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018]
         return (
             <FilterModule onSubmit={this.props.getData}>
                 <Filter>
                     <Title>Week Start</Title>
-                    <Select {...this.props} filterId="weekStart" value={weekStart} number={13} label="Week" />
+                    <Select {...this.props} filterId="weekStart" value={weekStart} number={weeksIncluded} label="Week" />
                     <Select {...this.props} filterId="startYear" value={startYear} customData={years} label="Year"/> 
                 </Filter>
                 <Filter>
                     <Title>Week End</Title>
-                    <Select {...this.props} filterId="weekEnd" value={weekEnd} number={13} label="Week"/>
+                    <Select {...this.props} filterId="weekEnd" value={weekEnd} number={weeksIncluded} label="Week"/>
                     <Select {...this.props} filterId="endYear" value={endYear} customData={years} label="Year"/>  
                 </Filter>
+                <RegPostseasonToggle {...this.props}/>
                 <Button type="submit">Set Range</Button>
             </FilterModule>
         )

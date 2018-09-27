@@ -102,7 +102,6 @@ export default class HeatMap extends Component {
             { type: 'Superior', color: '#228B22' }, 
             { type: 'Elite', color: '#4169e1' }
         ];
-
         return (
             <div>
                 <Title>Heat Map</Title>

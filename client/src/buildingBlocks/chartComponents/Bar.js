@@ -37,7 +37,7 @@ export default class Bar extends Component {
             hoverFocus
         } = this.props
         const transform = {
-            transform: `translate(${xScale.bandwidth() * index}px, ${height - margin.bottom + margin.top - barScale(dataPoint)}px`
+            transform: `translate(${xScale.bandwidth() * index + padding}px, ${height - margin.bottom + margin.top - barScale(dataPoint)}px`
         }
         return (
             <Rect 

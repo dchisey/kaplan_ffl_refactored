@@ -44,13 +44,14 @@ export default class LineChart extends Component {
             .range([0, width - margin.left - margin.right])
 
         const lineScale = d3.scaleLinear()
-            .domain([0, totalWeeks])
+            .domain([0, ticks.length])
             .range([0, width - margin.left - margin.right])
-
+        console.log(ticks.length)
         const yScale = d3.scaleLinear()
             .domain(d3.extent([0, 200]).reverse())
             .rangeRound([0, height - margin.bottom])
             .nice()
+            
         const line = d3.line()
             .defined(d => d !== undefined)
             .x((d, i) => {
@@ -77,6 +78,7 @@ export default class LineChart extends Component {
         const { leagueData, ownerFocus, hoverFocus, changeOwnerFocus, 
                 changeHoverFocus, removeHoverFocus, title, rotation,
                 totalWeeks, dateSetData, ticks, previousWeekStart  } = this.props
+
         const textStyle = {
             fill: 'black',
             fontSize: '25px',
