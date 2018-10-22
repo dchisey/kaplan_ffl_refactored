@@ -34,7 +34,7 @@ class LeagueGraphs extends Component {
             hoverFocus: '',
             gridHeight: 375,
             weekStart: 1,
-            weekEnd: 5,
+            weekEnd: 6,
             previousWeekStart: 1,
             totalWeeks: 13,
             startYear: 2009,
