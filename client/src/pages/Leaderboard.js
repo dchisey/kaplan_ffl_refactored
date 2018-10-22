@@ -3,12 +3,6 @@ import DivSpace from '../buildingBlocks/DivSpace'
 import List from '../buildingBlocks/List'
 import styled from 'styled-components';
 
-const Test = styled.div`
-    width :100%;
-    height: 900px;
-    background-color: white;
-`
-
 const LeaderboardGrid = styled.div`
     margin: 10px;
     display: grid;
