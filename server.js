@@ -3,15 +3,14 @@ const app = express();
 
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
-const Result = require('./server/models');
 const routes = require('./server/routes');
 
 //bring in dotenv variables
 require('dotenv').config();
 
 const PORT = process.env.PORT || 8080;
-// const URI = process.env.DB_URI;
-const URI = 'mongodb://localhost/kaplanFfl'
+const URI = process.env.DB_URI;
+// const URI = 'mongodb://localhost/kaplanFfl'
 
 console.log(`env: ${process.env.PORT} || selectedPort: ${PORT}`)
 
