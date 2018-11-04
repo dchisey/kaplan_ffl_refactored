@@ -24,7 +24,9 @@ class Leaderboard extends Component {
             layout: 'full',
             stat: null,
             sort: 'best',
-            playerFocus: null
+            playerFocus: null,
+            mounted: false,
+            leagueData: {}
         }
         this.changeOwnerFocus = this.changeOwnerFocus.bind(this)
     }
@@ -39,29 +41,31 @@ class Leaderboard extends Component {
 
     async componentDidMount() {
         const leagueData = await fetch('/leaderboard', { method: 'post' }).then(res => res.json())
-        this.setState({ leagueData })
+        this.setState({ leagueData, mounted: true })
     }
 
     render() {
-        console.log(this.state.leagueData)
         return (
             <LeaderboardGrid>
                 <DivSpace {...this.state} style={{ gridColumn: 1 }} render={() => 
-                    <List stats={['total points', 'average points', 'juggernauts']} 
+                    <List stats={['total points']} 
                         {...this.state}
                         unit='weekly' 
+                        title='Weekly'
                     />
                 } />
                 <DivSpace {...this.state} style={{ gridColumn: 2 }} render={() => 
-                    <List stats={['total points', 'average points', 'juggernauts']} 
+                    <List stats={['total points', 'average points', 'juggernauts', 'elite games', 'abysmal games']} 
                         {...this.state}
                         unit='annual' 
+                        title='Annual'
                     />
                 }/>
                 <DivSpace {...this.state} style={{ gridColumn: 3 }} render={() => 
-                    <List stats={['total points', 'average points', 'juggernauts']} 
+                    <List stats={['total points', 'average points', 'juggernauts', 'elite games', 'abysmal games']} 
                         {...this.state}
                         unit='allTime' 
+                        title='All Time'
                     />
                 }/>
             </LeaderboardGrid>

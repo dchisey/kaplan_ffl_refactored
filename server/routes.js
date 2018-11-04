@@ -92,6 +92,7 @@ module.exports = function(app) {
 					_id: 0,
 					owner: '$Owner',
 					year: '$Year',
+					high: '$High',
 					totalPts: '$Pts',
 					juggernauts: 1,
 					elite: '$Elite',
@@ -107,6 +108,7 @@ module.exports = function(app) {
 								_id: 0,
 								owner: 1,
 								year: 1,
+								high: 1,
 								totalPts: 1,
 								juggernauts: 1,
 								elite: 1,
@@ -124,15 +126,9 @@ module.exports = function(app) {
 								},
 								averagePts: { $avg: '$totalPts' },
 								totalPts: { $sum: '$totalPts' },
-								juggernauts: {
-									$sum: {
-										$cond: {
-											if: { $eq: ['$high', '$totalPts'] },
-											then: 1,
-											else: 0
-										}
-									}
-								},
+								juggernauts: { $sum: '$juggernauts'	},
+								elite: { $sum: '$elite' },
+								abysmal: { $sum: '$abysmal' },
 								history: { $push: {
 									owner: '$owner',
 									year: '$year',
@@ -151,6 +147,8 @@ module.exports = function(app) {
 								averagePts: 1,
 								totalPts: 1,
 								juggernauts: 1,
+								elite: 1,
+								abysmal: 1,
 								history: 1,
 								postseason: {
 									$slice: [ '$history', -2 ]
@@ -167,15 +165,7 @@ module.exports = function(app) {
 								_id: '$owner',
 								averagePts: { $avg: '$totalPts' },
 								totalPts: { $sum: '$totalPts' },
-								juggernauts: {
-									$sum: {
-										$cond: {
-											if: { $eq: ['$high', '$totalPts'] },
-											then: 1,
-											else: 0
-										}
-									}
-								},
+								juggernauts: { $sum: '$juggernauts' },
 								elite: { $sum: '$elite' },
 								abysmal: { $sum: '$abysmal' }
 							}
