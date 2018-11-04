@@ -70,14 +70,26 @@ export default class List extends Component {
         const data = leagueData[unit]
         const finalEntries = []
         const isBest = sortBy === 'best'
-        data.sort((a, b) => b[stat.key] - a[stat.key])
+        console.log(data)
+        data.sort((a, b) => {
+            const firstStat = a[stat.key]
+            const secondStat = b[stat.key]
+            //if stat & year are the same, sort by owner name
+            if(firstStat === secondStat && a.year === b.year) {
+                if(a.owner > b.owner) return 1
+                else return -1
+            };
+            //if stat is the same, sort by year
+            if(firstStat === secondStat) return b.year - a.year;
+            return secondStat - firstStat
+        })
         if(isBest) {
             for(let i = 0; i < numEntries; i++) {
                 finalEntries.push(data[i])
             }
         } else {
             const adjDataLength = data.length - 1 
-            for(let i = adjDataLength; i > adjDataLength - numEntries; i--){
+            for(let i = adjDataLength; i > adjDataLength - numEntries; i--) {
                 finalEntries.push(data[i])
             }
         }
@@ -128,7 +140,7 @@ export default class List extends Component {
     }
 
     render() {
-        const { mounted, title, changeOwnerFocus, ownerFocus } = this.props
+        const { mounted, title, changeOwnerFocus } = this.props
         const { stat } = this.state
         const data = mounted ? this.getEntries() : undefined
         return (
