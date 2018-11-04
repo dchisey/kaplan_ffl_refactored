@@ -20,6 +20,13 @@ const Table = styled.table`
     border-collapse: collapse;
     padding: 0px 20px;
 `
+const Row = styled.tr`
+    cursor: pointer;
+    ${props => props.ownerFocus ? 
+        'color: green; font-family: "Bungee", cursive; font-weight: 100;' 
+        : 'color: black;'}
+`
+
 const Header = styled.th`
     font-weight: 700;
     font-size: 20px;
@@ -35,12 +42,18 @@ export default class List extends Component {
         super(props)
         this.state = {
             sortBy: 'best',
-            stat: 'totalPts',
+            stat: {
+                name: 'Total Points',
+                key: 'totalPts',
+                columnTitle: 'Points',
+                youShouldInclude2018: false
+            },
             numEntries: 15
         }
         this.changeSortBy = this.changeSortBy.bind(this)
         this.getEntries = this.getEntries.bind(this)
         this.changeStat = this.changeStat.bind(this)
+        this.ownerFocus = this.ownerFocus.bind(this)
     }
 
     changeSortBy(e) {
@@ -57,7 +70,7 @@ export default class List extends Component {
         const data = leagueData[unit]
         const finalEntries = []
         const isBest = sortBy === 'best'
-        data.sort((a, b) => b[stat] - a[stat])
+        data.sort((a, b) => b[stat.key] - a[stat.key])
         if(isBest) {
             for(let i = 0; i < numEntries; i++) {
                 finalEntries.push(data[i])
@@ -72,44 +85,52 @@ export default class List extends Component {
         return finalEntries
     }
 
+    ownerFocus(owner) {
+        return this.props.ownerFocus === owner
+    }
+
     changeStat(e) {
         const newStat = e.target.value
         const statMap = [
             {
                 name: 'Total Points',
                 key: 'totalPts',
+                columnTitle: 'Points',
                 youShouldInclude2018: false
             },
             {   
                 name: 'Average Points',
                 key: 'averagePts',
+                columnTitle: 'Points',
                 youShouldInclude2018: true 
             },
             {
                 name: 'Juggernauts',
                 key: 'juggernauts',
+                columnTitle: 'Juggs',
                 youShouldInclude2018: true
             },
             {
                 name: 'Elite Games',
                 key: 'elite',
+                columnTitle: 'Games',
                 youShouldInclude2018: true
             },
             {
                 name: 'Abysmal Games',
                 key: 'abysmal',
+                columnTitle: 'Games',
                 youShouldInclude2018: true
             }
         ]
         const [ mappedStat ] = statMap.filter(stat => stat.name === newStat)
-        this.setState({ stat: mappedStat.key })
+        this.setState({ stat: mappedStat })
     }
 
     render() {
-        const { leagueData, mounted, unit, title } = this.props
+        const { mounted, title, changeOwnerFocus, ownerFocus } = this.props
         const { stat } = this.state
         const data = mounted ? this.getEntries() : undefined
-        mounted ? console.log(leagueData.weekly.filter(e => e.owner === 'Adam Wilhelm')) : null
         return (
             <Space>
                 <ListFilter {...this.state} {...this.props} 
@@ -119,14 +140,14 @@ export default class List extends Component {
                 <Table>
                     <Header>Owner</Header>
                     {data && data[0].year ? <Header>Year</Header> : null}
-                    <Header>{stat}</Header>
+                    <Header>{stat.columnTitle}</Header>
                     {mounted ? data.map(entry => {
                         return (
-                            <tr>
+                            <Row onClick={changeOwnerFocus} ownerFocus={this.ownerFocus(entry.owner)} >
                                 <td>{entry.owner}</td>
                                 {entry.year ? <StatCell>{entry.year}</StatCell>: null}
-                                <StatCell>{entry[stat].toFixed(1)}</StatCell>
-                            </tr>
+                                <StatCell>{entry[stat.key].toFixed(1)}</StatCell>
+                            </Row>
                         )
                     }) : null}
                 </Table>

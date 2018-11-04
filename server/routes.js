@@ -148,7 +148,7 @@ module.exports = function(app) {
 								totalPts: 1,
 								juggernauts: 1,
 								elite: 1,
-								abysmal: 1,
+								abysmal: { $abs: '$abysmal' },
 								history: 1,
 								postseason: {
 									$slice: [ '$history', -2 ]
@@ -178,7 +178,7 @@ module.exports = function(app) {
 								totalPts: 1,
 								juggernauts: 1,
 								elite: 1,
-								abysmal: 1
+								abysmal: { $abs: '$abysmal' }
 							}
 						},
 						{ $sort: { totalPts: -1 } }
